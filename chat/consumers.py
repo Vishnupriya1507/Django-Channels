@@ -7,12 +7,14 @@ from django.contrib.auth.models import User
 class ChatConsumer(WebsocketConsumer):
     def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['room_name']    # here we are getting room name from url
-        self.room_group_name = '%s' % self.room_name                       # here its making group name which i 
-        print (self.room_group_name)                                       # made it same as room name here
-        users = list(User.objects.all()) 
-        print('all users in chat consumer:', users)
-         
+        
+        self.room_group_name = '%s' % self.room_name                    # here its making group name which i
+                            
+                                                                        # made it same as room name here
+        
 
+         
+        """
         # Join room group
         '''
         async_to_sync(self.channel_layer.group_add)(                       # group_add("group_name","channel_name")
@@ -22,36 +24,44 @@ class ChatConsumer(WebsocketConsumer):
 
         #self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.accept()
-        #self.rooms = set()
+        
         '''
-        #self.user = scope["user"]
-        if self.scope["user"].is_anonymous:
-            print(self.scope["user"].username + "  heyyyyy")
-            # Reject the connection
-            self.close()
-        else:
+         # Reject the connection
+        #self.close()
+        
             # Accept the connection
-            
-            if self.room_group_name == "check_room1":
-                async_to_sync(self.channel_layer.group_add)(            # SYNTAX--group_add("group_name","channel_name")
-                self.room_group_name,
-                self.channel_name)
-                print (self.channel_name + "hoiiiiii")
-                self.accept()
-            elif self.room_group_name =="lobby":
-                async_to_sync(self.channel_layer.group_add)(            # SYNTAX--group_add("group_name","channel_name")
-                self.room_group_name,
-                self.channel_name)
-                self.accept()
-            else:                                                       # THIS BLOCK OF CODE -- is for disconnecting user 
-                self.accept()                                           # who entered room name other than what are mentioned
+        """    
+        if self.room_group_name == "check_room1":
+            async_to_sync(self.channel_layer.group_add)(            # SYNTAX--group_add("group_name","channel_name")
+            self.room_group_name,
+            self.channel_name)
 
-              
+        
+            for i in Room.objects.all():
+                if str(i)==self.room_group_name:
+                    self.room_id=str(i.id)
+                    print(i.id)
+                    
+                
+            self.accept()
+        elif self.room_group_name =="lobby":
+            async_to_sync(self.channel_layer.group_add)(            # SYNTAX--group_add("group_name","channel_name")
+            self.room_group_name,
+            self.channel_name)
+            self.accept()
+        else:                                                       # THIS BLOCK OF CODE -- is for disconnecting user 
+            self.accept()                                           # who entered room name other than what are mentioned
+        
+
+        #print(self.rooms)
+             
 
         
 
     def disconnect(self):
         # Leave room group
+        
+
         if self.room_group_name =="check_room1":
             async_to_sync(self.channel_layer.group_discard)(      #  group_discard("group_name","channel_name")
             "vishnis" ,self.channel_name)  
@@ -62,31 +72,39 @@ class ChatConsumer(WebsocketConsumer):
         
         else:                                                  # THIS BLOCK OF CODE -- is for disconnecting user 
             self.close()                                      # who entered room name other than what are mentioned
+        
+
+
+
 
                                                                      
     # Receive message from WebSocket
     def receive(self, text_data):
         text_data_json = json.loads(text_data)             # text_data is received from frontend
         message = text_data_json['message']
-                                                            #user = text_data_json['username']
-        #self.user = scope["user"]
+                                                            
+
+
         
+
         # Send message to room group
          
         if self.room_group_name =="check_room1":
             async_to_sync(self.channel_layer.group_send)(             # group_send("group_name",{"poinies":True})
-               "check_room1",{'type': 'chat_message','message': message})   ##,'username':user
-                                                                      # Sends an event to a group.
-                                                                      #An event has a special 'type' key corresponding                                          #
-                                                                      # 'message': message   
-                 
+               "check_room1",{'type': 'chat_message','message': message,  
+                'username':self.scope["user"].username                 # Sends an event to a group.
+                                                                      #An event has a special 'type' key corresponding  'message': message                                             #
+                ,'room_id':self.room_id })                                  
+                
                                                                       # to the name of the method that should 
                                                                      # be invoked on consumers that receive the event.
              
-        elif self.room_group_name =="lobby":
+        if self.room_group_name =="lobby":
             async_to_sync(self.channel_layer.group_send)(
               "lobby",{'type': 'chat_message','message': message})
+        print(self.scope["user"].username + "  heyyyyy")           
         
+        #print(self.room_id)
         print("sd")
 
         #self.send(text_data=json.dumps({'message': message }))     # self.send() sends msg only to one channel 
@@ -97,14 +115,15 @@ class ChatConsumer(WebsocketConsumer):
     def chat_message(self, event):
         message = event['message']
         #user = event['username']
-        print("ddd")
+        
         if self.room_group_name=="check_room1":
             
-            self.send(text_data=json.dumps({'message': message})) 
+            self.send(text_data=json.dumps({'message': message,'username':self.scope["user"].username,'room_id':self.room_id})) 
             ques = Problem.objects.get(pk=1).prob_ques
             self.send(text_data=json.dumps({'message': ques})) 
             ans = Problem.objects.get(pk=1).answer
             if message==ans:
+
                 self.send(text_data=json.dumps({'message': "YES YOU ARE RIGHT!!!"}))
             else:
                 self.send(text_data=json.dumps({'message':"YOU ARE WRONG !!"})) 
@@ -113,6 +132,6 @@ class ChatConsumer(WebsocketConsumer):
         # self.send(text_data=json.dumps({'message': message})) 
 
             
-             
+       
             
                                   
