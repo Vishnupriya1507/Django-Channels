@@ -1,40 +1,66 @@
 <!-- chat/templates/chat/room.html -->
+
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8"/>
     <title>Chat Room</title>
 </head>
+
 <body>
     <textarea id="chat-log" cols="100" rows="20"></textarea><br/>
-    <input id="chat-message-input" type="text" size="100"/><br/>
-    <input id="chat-message-submit" type="button" value="Send"/>
-</body>
+    <input id="chat-message-input" type="text" size="70"/><br/>
+       
+    <input id="chat-message-submit" type="button" value="Send"/>   <!--<input id="chat-message-user" 
+                                                                      type="text" size="100"/><br/> -->
+</body>                                                                     
 <script>
     var roomName = {{ room_name_json }};    //in views we used room_name_json  in room view as 
     console.log(roomName);                  // 'room_name_json':mark_safe(json.dumps(room_name)
+    
 
-    var chatSocket = new WebSocket(
-        'ws://' + window.location.host +
-        '/ws/chat/' + roomName + '/');
+    
+    
+    //creating a Web Socket connection
+    var chatSocket = new WebSocket('ws://' + window.location.host + '/ws/chat/' + roomName + '/');
+     
+    
 
+    
 
-
-
-    chatSocket.onopen = function () {
+    chatSocket.onopen = function (message) {
         
-        console.log("Connected to chat socket");
-        //chatSocket.send('Hey server, whats up?');
+        
+        console.log("Connected to chat socket");// Display user friendly messages for the successful establishment of     
+        //console.log("Got websocket message " + message.data); //connection
+        //var data = JSON.parse(message.data);
+        //var ok_msg = "";
+        //ok_msg = "<div class='contextual-message text-muted'>" + data.username + " joined the room!" +       " </div>"
     };
 
     chatSocket.onmessage = function(event) {
         var data = JSON.parse(event.data);
+        console.log(data);
         var message = data['message'];
-        
+        var user = data['username'] ; 
+        console.log(message);
+        //var msgdiv = $("#room-" + data.room + " .messages");
+            //
+        //var ok_msg = "";
+        //ok_msg = "<div class='message'>" +
+                                    "<span class='username'>" + data.username + "</span>" +
+                                    "<span class='body'>" + data.message + "</span>" +
+                                    "</div>";
+        //msgdiv.append(ok_msg);
+        //msgdiv.scrollTop(msgdiv.prop("scrollHeight"));
+        console.log(data.username+'ghfh');
+        //chatSocket.send("from server :" +message);
         document.querySelector('#chat-log').value += (message + '\n');
+        //document.querySelector('#chat-log').value += (user + '\n');
+
     };
 
-    chatSocket.onclose = function(e) {
+    chatSocket.onclose = function() {
         console.error('Chat socket closed unexpectedly');
     };
 
@@ -44,16 +70,107 @@
             document.querySelector('#chat-message-submit').click();
         }
     };
+                                                                          //////////
+  //  document.querySelector('#chat-message-user').focus();
+  //  document.querySelector('#chat-message-user').onkeyup = function(e) {
+  //      if (e.keyCode === 13) {  // enter, return
+  //          document.querySelector('#chat-message-submit').click();
+  //      }
+  //  };
 
     document.querySelector('#chat-message-submit').onclick = function(event) {
         var messageInputDom = document.querySelector('#chat-message-input');
+        //var messageUser = document.querySelector('#chat-message-user');       //
         var message = messageInputDom.value;
+        //var msgUser=messageUser.value;     //
         
         chatSocket.send(JSON.stringify({
-            'message': message
+            'message': message,
+            //'user'   : msgUser      //
         }));
 
+        //messageUser.value = ''; //
         messageInputDom.value = '';
     };
 </script>
 </html>
+
+
+
+<!--
+<!DOCTYPE html>
+  <meta charset="utf-8" />
+  <title>WebSocket Test</title>
+  <script language="javascript" type="text/javascript">
+
+  var wsUri = "wss://echo.websocket.org/";
+  var server = new WebSocketServer("ws://localhost:8181");
+  var clients = new List<IWebSocketConnection>();
+  var output;
+  
+
+  
+
+
+
+  function init()
+  {
+    output = document.getElementById("output");
+    testWebSocket();
+  }
+
+  function testWebSocket()
+  {
+    websocket = new WebSocket(wsUri);
+    websocket.onopen = function(evt) { onOpen(evt) };
+    websocket.onclose = function(evt) { onClose(evt) };
+    websocket.onmessage = function(evt) { onMessage(evt) };
+    websocket.onerror = function(evt) { onError(evt) };
+  }
+
+  function onOpen(evt)
+  {
+    writeToScreen("CONNECTED");
+    doSend("WebSocket rocks");
+  }
+
+  function onClose(evt)
+  {
+    writeToScreen("DISCONNECTED");
+
+  }
+
+  function onMessage(evt)
+  {
+    writeToScreen('<span style="color: blue;">RESPONSE: ' + evt.data+'</span>');
+    websocket.close();
+  }
+
+  function onError(evt)
+  {
+    writeToScreen('<span style="color: red;">ERROR:</span> ' + evt.data);
+  }
+
+  function doSend(message)
+  {
+    writeToScreen("SENT: " + message);
+    websocket.send(message);
+  }
+
+  function writeToScreen(message)
+  {
+    var pre = document.createElement("p");
+    pre.style.wordWrap = "break-word";
+    pre.innerHTML = message;
+    output.appendChild(pre);
+  }
+
+  window.addEventListener("load", init, false);
+
+  </script>
+
+  <h2>WebSocket Test</h2>
+
+  <div id="output"></div>
+          
+-->
