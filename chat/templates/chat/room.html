@@ -31,12 +31,28 @@
     chatSocket.onopen = function (message) {
         
         
-        console.log("Connected to chat socket");// Display user friendly messages for the successful establishment of     
-        //console.log("Got websocket message " + message.data); //connection
-        //var data = JSON.parse(message.data);
+        var data = JSON.parse(event.data);
+        var message = data['message'];
+        var user = data['username'] ; 
+        
+        //THESE 6 LINES ARE FOR TRIAL  TOOK FROM RANDOM SOURCES TO SHOW USERNAME ON CHAT LOG
+        //console.log(data);
+        //var msgdiv = $("#room-" + data.room + " .messages");
+            
         //var ok_msg = "";
-        //ok_msg = "<div class='contextual-message text-muted'>" + data.username + " joined the room!" +       " </div>"
+        //ok_msg = "<div class='message'>" +
+                                    "<span class='username'>" + data.username + "</span>" +
+                                    "<span class='body'>" + data.message + "</span>" +
+                                    "</div>";
+        //msgdiv.append(ok_msg);
+        //msgdiv.scrollTop(msgdiv.prop("scrollHeight"));
+        console.log(data.username+'   helloooo');
+        //chatSocket.send("from server :" +message);
+        document.querySelector('#chat-log').value += (message + '\n');
+        //document.querySelector('#chat-log').value += (user + '\n');
+
     };
+
 
     chatSocket.onmessage = function(event) {
         var data = JSON.parse(event.data);
@@ -54,9 +70,9 @@
         //msgdiv.append(ok_msg);
         //msgdiv.scrollTop(msgdiv.prop("scrollHeight"));
         console.log(data.username+'ghfh');
-        //chatSocket.send("from server :" +message);
+        
         document.querySelector('#chat-log').value += (message + '\n');
-        //document.querySelector('#chat-log').value += (user + '\n');
+       
 
     };
 
@@ -70,7 +86,7 @@
             document.querySelector('#chat-message-submit').click();
         }
     };
-                                                                          //////////
+    //FOR TRIAL ONLY                                                                       //////////
   //  document.querySelector('#chat-message-user').focus();
   //  document.querySelector('#chat-message-user').onkeyup = function(e) {
   //      if (e.keyCode === 13) {  // enter, return
@@ -86,10 +102,10 @@
         
         chatSocket.send(JSON.stringify({
             'message': message,
-            //'user'   : msgUser      //
+            //'user'   : msgUser      // FOR TRIAL ONLY
         }));
 
-        //messageUser.value = ''; //
+        //messageUser.value = ''; //FOR TRIAL ONLY
         messageInputDom.value = '';
     };
 </script>
