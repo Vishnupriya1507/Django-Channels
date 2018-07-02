@@ -1,0 +1,22 @@
+roombtn
+{
+	color: black;
+	background-color: cornflowerblue;
+	position: absolute;
+	top: 10vh;
+	display: inline-block;
+}
+#create_room_btn
+{
+	left: 30vw;
+}
+#enter_room_btn
+{
+	left: 60vw;
+}
+#create_room,#enter_room
+{
+	display: none;
+	left: 40vw;
+	top: 50vh;
+} 

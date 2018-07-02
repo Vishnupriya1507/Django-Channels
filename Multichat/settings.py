@@ -31,6 +31,10 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
     'channels',
     'chat',
     'django.contrib.admin',
@@ -38,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'allauth.socialaccount.providers.google',
     'django.contrib.staticfiles',
 ]
 
@@ -132,4 +137,32 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
+
+
 STATIC_URL = '/static/'
+
+
+SITE_ID = 1
+AUTHENTICATION_BACKENDS = [ 'django.contrib.auth.backends.ModelBackend',
+
+                           'allauth.account.auth_backends.AuthenticationBackend']
+
+SOCIALACCOUNT_PROVIDERS = { 'google': 
+                             { 'SCOPE': ['email'],
+                               'AUTH_PARAMS': { 'access_type': 'online' }
+                             }
+                          }
+
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY="504459446204-v1jtm0h04mgv7ajnipa48d2g6ijp4f68.apps.googleusercontent.com"
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = "p-GO-1YXrMWWD5AmYFZPH29A"
+
+
+
+LOGIN_REDIRECT_URL='/chat/' 
+LOGOUT_REDIRECT_URL = '/accounts/login/'
+
