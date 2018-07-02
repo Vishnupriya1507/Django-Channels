@@ -1,10 +1,13 @@
 <!-- chat/templates/chat/room.html -->
 
 <!DOCTYPE html>
+{% load static %}
 <html>
 <head>
     <meta charset="utf-8"/>
     <title>Chat Room</title>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/reconnecting-websocket/1.0.0/reconnecting-websocket.min.js"></script>
 </head>
 
 <body>
@@ -16,7 +19,7 @@
 </body>                                                                     
 <script>
     var roomName = {{ room_name_json }};    //in views we used room_name_json  in room view as 
-    console.log(roomName);                  // 'room_name_json':mark_safe(json.dumps(room_name)
+    //console.log(roomName);                  // 'room_name_json':mark_safe(json.dumps(room_name)
     
 
     
@@ -31,48 +34,33 @@
     chatSocket.onopen = function (message) {
         
         
-        var data = JSON.parse(event.data);
-        var message = data['message'];
-        var user = data['username'] ; 
-        
-        //THESE 6 LINES ARE FOR TRIAL  TOOK FROM RANDOM SOURCES TO SHOW USERNAME ON CHAT LOG
-        //console.log(data);
-        //var msgdiv = $("#room-" + data.room + " .messages");
-            
+        console.log("Connected to chat socket");// Display user friendly messages for the successful establishment of     
+        //console.log("Got websocket message " + message.data); //connection
+        //var data = JSON.parse(message.data);
         //var ok_msg = "";
-        //ok_msg = "<div class='message'>" +
-                                    "<span class='username'>" + data.username + "</span>" +
-                                    "<span class='body'>" + data.message + "</span>" +
-                                    "</div>";
-        //msgdiv.append(ok_msg);
-        //msgdiv.scrollTop(msgdiv.prop("scrollHeight"));
-        console.log(data.username+'   helloooo');
-        //chatSocket.send("from server :" +message);
-        document.querySelector('#chat-log').value += (message + '\n');
-        //document.querySelector('#chat-log').value += (user + '\n');
-
+        //ok_msg = "<div class='contextual-message text-muted'>" + data.username + " joined the room!" +       " </div>"
     };
-
 
     chatSocket.onmessage = function(event) {
         var data = JSON.parse(event.data);
-        console.log(data);
         var message = data['message'];
-        var user = data['username'] ; 
-        console.log(message);
-        //var msgdiv = $("#room-" + data.room + " .messages");
-            //
-        //var ok_msg = "";
-        //ok_msg = "<div class='message'>" +
-                                    "<span class='username'>" + data.username + "</span>" +
+        var user = data['username'];
+        var room_id = data['room_id'];      //NOW ROOM_ID OF PARTICULAR ROOM IN WHICH USER IS IN ,IS SENT TO FRONTEND 
+
+        console.log(data);                  // Object { username: "Vishnupriya", message: "hiiiii", room_id: "63" }
+        var msgdiv = $("#room-" + data.room_id + " .messages");
+            
+        var ok_msg = "";
+        ok_msg = "<div class='message'>" +
+                                    "<span class='username'>" + data.user + "</span>" +
                                     "<span class='body'>" + data.message + "</span>" +
                                     "</div>";
-        //msgdiv.append(ok_msg);
+        msgdiv.append(ok_msg);
         //msgdiv.scrollTop(msgdiv.prop("scrollHeight"));
-        console.log(data.username+'ghfh');
-        
+        console.log(data.username + ":" + data.message);
+        //chatSocket.send("from server :" +message);
         document.querySelector('#chat-log').value += (message + '\n');
-       
+        //document.querySelector('#chat-log').value += (user + '\n');
 
     };
 
@@ -86,7 +74,7 @@
             document.querySelector('#chat-message-submit').click();
         }
     };
-    //FOR TRIAL ONLY                                                                       //////////
+                                                                          //////////
   //  document.querySelector('#chat-message-user').focus();
   //  document.querySelector('#chat-message-user').onkeyup = function(e) {
   //      if (e.keyCode === 13) {  // enter, return
@@ -102,10 +90,10 @@
         
         chatSocket.send(JSON.stringify({
             'message': message,
-            //'user'   : msgUser      // FOR TRIAL ONLY
+            //'user'   : msgUser      //
         }));
 
-        //messageUser.value = ''; //FOR TRIAL ONLY
+        //messageUser.value = ''; //
         messageInputDom.value = '';
     };
 </script>
