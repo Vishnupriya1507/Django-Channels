@@ -9,6 +9,7 @@ urlpatterns = [
     #url(r'^join_room/$', views.room,name = 'room'),
     url(r'^$', views.index, name='index'),
     url(r'^(?P<room_name>[^/]+)/$', views.room, name='room'),
+    url(r'^logout/$', views.logout,name = 'logout'),                # FOR CHECKING DJANGO PROJECT
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 

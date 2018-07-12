@@ -1,6 +1,12 @@
 from django.db import models
 #from django.db import IntegrityError
 
+#from django.contrib.auth.models import AbstractUser
+
+from django.db import models
+from django.contrib.auth.models import User
+
+
 class Room(models.Model):
     """
     A room for people to chat in.
@@ -9,7 +15,9 @@ class Room(models.Model):
     # Room title
     title = models.CharField(max_length=255)
     ans = models.CharField(max_length=200,default="abss")
-
+    max_players = models.IntegerField(default=0)
+    room_status = models.CharField(max_length=100, default="Closed")   #status of room wheteher it is open or closed
+    ques_num = models.IntegerField(default=1)
 
     # If only "staff" users are allowed (is_staff on django's User)
     staff_only = models.BooleanField(default=False)
@@ -19,12 +27,21 @@ class Room(models.Model):
 
 class Problem(models.Model):
 
-
-    room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    ques_no = models.IntegerField(default=1)
     prob_ques = models.CharField(max_length=1000, null=True)
-    answer = models.CharField(max_length=1000)
+    ques_answer = models.CharField(max_length=1000)
    
 
     def __str__(self):
         
         return self.prob_ques
+
+class Player(models.Model):
+    name = models.OneToOneField(User,on_delete=models.CASCADE)
+    score = models.IntegerField(default=0)
+    room = models.CharField(max_length=10000)
+    ans_given = models.CharField(max_length=100000)
+    ans_chosen = models.CharField(max_length=100000)
+
+    def __str__(self):
+        return self.name.username

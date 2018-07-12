@@ -1,28 +1,54 @@
 <!-- chat/templates/chat/room.html -->
 
 <!DOCTYPE html>
+
+
+{% load static %}
 <html>
+
 <head>
     <meta charset="utf-8"/>
     <title>Chat Room</title>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/reconnecting-websocket/1.0.0/reconnecting-websocket.min.js"></script>
+    
 </head>
+<ul>
+    {% for user in users %}
+      <!-- NOTE: We escape HTML to prevent XSS attacks. -->
+      
+      <li data-username="{{ user.username|escape }}">
+        {{ user.username|escape }}: {{ user.status|default:'Offline' }}
+      </li>
+    {% endfor %}
+        </ul>
+    
+    <div class="col s12 black darken-2 main-content" id="question-div">
+          <!-- Question Div Goes Here -->
+          <div id='container' class="center">
+            <div id='title' class="center">
+              <h3>PLAYING ARENA</h3>
+    </div>
 
+     
 <body>
     <textarea id="chat-log" cols="100" rows="20"></textarea><br/>
     <input id="chat-message-input" type="text" size="70"/><br/>
        
-    <input id="chat-message-submit" type="button" value="Send"/>   <!--<input id="chat-message-user" 
-                                                                      type="text" size="100"/><br/> -->
+    <input id="chat-message-submit" type="button" value="Send "/>   <!--<input id="chat-message-user"  type="text" size="100"/><br/> -->
+     
+    <input id="chat-message-fetch" type="button" value="Send Question "/>                                                                 
+
 </body>                                                                     
 <script>
     var roomName = {{ room_name_json }};    //in views we used room_name_json  in room view as 
-    console.log(roomName);                  // 'room_name_json':mark_safe(json.dumps(room_name)
+    //console.log(roomName);                  // 'room_name_json':mark_safe(json.dumps(room_name)
     
 
     
     
     //creating a Web Socket connection
-    var chatSocket = new WebSocket('ws://' + window.location.host + '/ws/chat/' + roomName + '/');
+    var chatSocket = new ReconnectingWebSocket('ws://' + window.location.host + '/ws/chat/' + roomName + '/');
      
     
 
@@ -40,28 +66,56 @@
 
     chatSocket.onmessage = function(event) {
         var data = JSON.parse(event.data);
-        console.log(data);
         var message = data['message'];
-        var user = data['username'] ; 
-        console.log(message);
-        //var msgdiv = $("#room-" + data.room + " .messages");
-            //
-        //var ok_msg = "";
-        //ok_msg = "<div class='message'>" +
-                                    "<span class='username'>" + data.username + "</span>" +
-                                    "<span class='body'>" + data.message + "</span>" +
-                                    "</div>";
-        //msgdiv.append(ok_msg);
-        //msgdiv.scrollTop(msgdiv.prop("scrollHeight"));
-        console.log(data.username+'ghfh');
-        //chatSocket.send("from server :" +message);
-        document.querySelector('#chat-log').value += (message + '\n');
-        //document.querySelector('#chat-log').value += (user + '\n');
+        var user = data['username'];
+        var room_id = data['room_id'];
+        //var ques = data['ques'];
+        console.log(data);
+        //var msgdiv = $("#room-" + data.room_id + " .messages");
+        if (message==""){
+            var ok_msg = "";
+            ok_msg = "<div class='message'>" +"<span>" + data.room_id+"</span">+
+                                        "<span class='username'>" + data.user + "</span>" +
+                                        "<span class='body'>" + data.message + "</span>" +
+                                        "</div>";
+            //msgdiv.append(ok_msg);
+            //msgdiv.scrollTop(msgdiv.prop("scrollHeight"));
+            console.log(data.username + ":" + data.message);
+            //console.log(ok_msg + 'this is ok_msg');
+            //chatSocket.send("from server :" +message);
+            //document.querySelector('#chat-log').value += (message + '\n');
+            document.querySelector('#chat-log').value += (data.username +':'+ message + '\n');
+            //document.querySelector('#chat-log').value += (user + '\n');
+            }
+        else {
+          var ok_msg = "";
+            ok_msg = "<div class='message'>" +"<span>" + data.room_id+"</span">+
+                                        "<span class='username'>" + data.user + "</span>" +
+                                        "<span class='body'>" + data.message + "</span>" +
+                                        "</div>";
+            //msgdiv.append(ok_msg);
+            //msgdiv.scrollTop(msgdiv.prop("scrollHeight"));
+            console.log(data.username + ":" + data.message);
+            //console.log(ok_msg + 'this is ok_msg');
+            //chatSocket.send("from server :" +message);
+            //document.querySelector('#chat-log').value += (message + '\n');
+            document.querySelector('#chat-log').value += (data.username +':'+ message + '\n');
+            //document.querySelector('#chat-log').value += (user + '\n');
+         
+        }
+        
+
+        //if (data['is_logged_in']) {document.querySelector('#chat-log').value += (data.username + ': Online');}
+        //else {document.querySelector('#chat-log').value += (data.username + ': Offline');}
+        
 
     };
 
     chatSocket.onclose = function() {
         console.error('Chat socket closed unexpectedly');
+        setTimeout(function() {
+      connect();
+    }, 1000);
     };
 
     document.querySelector('#chat-message-input').focus();
@@ -86,7 +140,7 @@
         
         chatSocket.send(JSON.stringify({
             'message': message,
-            //'user'   : msgUser      //
+            'user'   : "rashi",    //
         }));
 
         //messageUser.value = ''; //
