@@ -12,6 +12,8 @@ from django.contrib.sessions.models import Session
 from django.utils import timezone
 from django.core import serializers
 
+
+#@login_required
 def get_current_users():
     active_sessions = Session.objects.filter(expire_date__gte=timezone.now())
     user_id_list = []
@@ -28,7 +30,7 @@ def get_current_users():
     # Query all logged in users based on id list
     
     return User.objects.filter(id__in=user_id_list)
-
+#@login_required
 def index(request):
 
     #rooms = Room.objects.order_by("title")
@@ -45,14 +47,14 @@ def index(request):
                                                          
     else:
         return HttpResponseRedirect('/accounts/login/')
-    
+    if Room.objects.filter(room_status="Open"):
+        rooms = Room.objects.filter(room_status="Open")
+        print(rooms)
+        return render(request, 'chat/index.html', {'rooms':rooms,})
+    room_name=Room()
+    return HttpResponseRedirect('/chat/')
 
-
-    rooms = Room.objects.filter(room_status="Open")
-    print(rooms)
-    return render(request, 'chat/index.html', {'rooms':rooms,})
-
-
+#@login_required
 def room(request, room_name):
     prob = Problem.objects.order_by('ques_no')
     users=list(get_current_users())
@@ -76,7 +78,7 @@ def room(request, room_name):
         if Room.objects.filter(title=room_name):
             print("this is in rooms")
             data = Room.objects.all()
-            
+            print(request.user.username)
             name = Room.objects.get(title=room_name)
             print(name)
 
@@ -91,7 +93,7 @@ def room(request, room_name):
             
             return render(request, 'chat/room.html',
             {'room_name_json': mark_safe(json.dumps(room_name)),
-            #'prob':prob,
+            #'user':request.user.username,
             'users':users,
             'room_status':name.room_status
             })
@@ -103,10 +105,13 @@ def room(request, room_name):
             
     else:
         print("else")
+        #create_room()
         room_name = Room()
-        name=Room.objects.create(title=room_name)
-        name.max_players+=1
+        name = Room.objects.create(title=room_name)
+        #name.max_players+=1
         name.save()
+
+     
         return render(request, 'chat/room.html', 
         {'room_name_json': mark_safe(json.dumps(room_name)),
         #'prob':prob,'users':users,
@@ -117,10 +122,17 @@ def room(request, room_name):
 
 
 
+@login_required
 def create_room(request):
-    #room = Room.objects.create(title = room_name)
-
-    return HttpResponseRedirect('/chat/room_name')
+    room_name = Room()
+    room_name.title="bcbd"
+    room_name.save()
+    #return HttpResponseRedirect('/')
+    return render(request, 'chat/room.html', 
+        {'room_name_json': mark_safe(json.dumps(room_name)),
+        #'prob':prob,'users':users,
+        'room_status':name.room_status
+        })
    
 #A Feature Of Django Session----NOT used in project
 """

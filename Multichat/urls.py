@@ -22,5 +22,6 @@ urlpatterns = [
     url(r'^accounts/', include('allauth.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^$', views.main, name='main'),
-    url(r'^accounts/logout/',views.logout ),   # FOR CHECKING DJANGO SESSION
+    url(r'^accounts/logout/',views.logout,name='logout'),   # FOR CHECKING DJANGO SESSION
+    #url(r'^create_room/$', views.create_room,name = 'create_room'),
 ]

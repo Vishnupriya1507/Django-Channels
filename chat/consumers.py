@@ -87,7 +87,12 @@ class ChatConsumer(WebsocketConsumer):
     def receive(self, text_data):
         text_data_json = json.loads(text_data)                 #text_data is received from frontend
         message = text_data_json['message']
+        msg_typed = text_data_json['msg_typed']
+        other_user = text_data_json['other_user']
+        #print(msg_typed) ----{"message":"","user":"rashi","msg_typed":true}
         
+        print(text_data_json)
+        #if msg_typed==True:
                                                             
 
         
@@ -124,24 +129,26 @@ class ChatConsumer(WebsocketConsumer):
                 'room_id':self.room_id ,                             # 'message': message         
                 'room_group_name': self.room_group_name,
                 'user.status':'Online',
-                'ques': self.ques
-                  })                                                 # to the name of the method that should 
+                'ques': self.ques,
+                'msg_typed':False
+                })                                                   # to the name of the method that should 
             print("sd")                                              # be invoked on consumers that receive the event.
         
         
 
         else:
-
+            msg_typed = True
             async_to_sync(self.channel_layer.group_send)(            # group_send("group_name",{"poinies":True})
                self.room_group_name,{
                 'type': 'chat_message',
                 'message': message,  
-                'username':self.scope["user"].username+"heyyyyyyyyyyyyyyyyyy",              # Sends an event to a group.
+                'username':other_user,                               # Sends an event to a group.
                                                                      #An event has a special 'type' key corresponding  'message': message                                             #
                 'room_id':self.room_id ,                             # 'message': message         
                 'room_group_name': self.room_group_name,
                 'user.status':'Online',
-                'ques': self.ques
+                #'ques': self.ques,
+                'msg_typed':True
                   })         
 
         """
@@ -190,26 +197,31 @@ class ChatConsumer(WebsocketConsumer):
     # Receive message from room group
     def chat_message(self, event):
         message = event['message']
-        user=self.scope["user"]
-
-        message['user']="rasss"
+        msg_typed=event['msg_typed']
+        #other_user = event['other_user']
+        print(event)
+        #print(msg_typed)
+        #message['user']="rasss"
         #user = event['username']
+
+
         if message=="":    
             self.send(text_data = json.dumps({'message': self.ques,
                 'username':"FROM SERVER :",
                 'room_id':event['room_id'],
                 'room_group_name': event['room_group_name'],
                 'user.status':'Online',
-                #'ques': self.ques
+                'msg_typed':False
                 }))
         
         else:
+            msg_typed = True
             self.send(text_data = json.dumps({'message': message,
-                'username':self.scope["user"].username,
+                'username':self.scope['user'].username,
                 'room_id':event['room_id'],
                 'room_group_name': event['room_group_name'],
                 'user.status':'Online',
-                #'ques': self.ques
+                'msg_typed':True
                 }))
 
             self.player.ans_given = message
@@ -223,16 +235,25 @@ class ChatConsumer(WebsocketConsumer):
                 self.ans= Problem.objects.get(pk= self.room.ques_num ).ques_answer 
                 self.player.save()
                 self.room.save()
-            
 
-                self.send(text_data = json.dumps({'message': "Correct Answer By : " + self.scope["user"].username,
+
+                self.send(text_data = json.dumps({'message': "Correct Answer By : " + self.scope['user'].username,
                     'username':"FROM SERVER :",
                     'room_id':event['room_id'],
                     'room_group_name': event['room_group_name'],
                     'user.status':'Online',
-                    #'ques': self.ques
-                    })) 
+                    'msg_typed':False
+                })) 
+            
 
+                message = ""
+                self.send(text_data = json.dumps({'message': self.ques,
+                'username':"FROM SERVER :",
+                'room_id':event['room_id'],
+                'room_group_name': event['room_group_name'],
+                'user.status':'Online',
+                'msg_typed':False
+                }))
             #ans = Problem.objects.get(pk=1).ques_answer
             #self.send(text_data=json.dumps({'message': "YES YOU ARE RIGHT!!!"}))
             print("sesdbgs")   

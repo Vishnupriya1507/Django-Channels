@@ -28,6 +28,12 @@
           <div id='container' class="center">
             <div id='title' class="center">
               <h3>PLAYING ARENA</h3>
+              <a href="{% url 'logout' %}">LOGOUT</a>
+          Hello, {{ request.user.username }}.
+
+            <!--{% if user.is_authenticated %}    {% endif %}-->
+             
+          
     </div>
 
      
@@ -48,7 +54,7 @@
     
     
     //creating a Web Socket connection
-    var chatSocket = new ReconnectingWebSocket('ws://' + window.location.host + '/ws/chat/' + roomName + '/');
+    var chatSocket = new WebSocket('ws://' + window.location.host + '/ws/chat/' + roomName + '/');
      
     
 
@@ -67,10 +73,14 @@
     chatSocket.onmessage = function(event) {
         var data = JSON.parse(event.data);
         var message = data['message'];
+        var msg_typed = data['msg_typed'];
+        var msg_typed = true;
+        var other_user = "rashi";
         var user = data['username'];
         var room_id = data['room_id'];
         //var ques = data['ques'];
-        console.log(data);
+        
+        console.log("Got websocket message " + event.data);
         //var msgdiv = $("#room-" + data.room_id + " .messages");
         if (message==""){
             var ok_msg = "";
@@ -124,7 +134,7 @@
             document.querySelector('#chat-message-submit').click();
         }
     };
-                                                                          //////////
+                                                                          
   //  document.querySelector('#chat-message-user').focus();
   //  document.querySelector('#chat-message-user').onkeyup = function(e) {
   //      if (e.keyCode === 13) {  // enter, return
@@ -134,14 +144,14 @@
 
     document.querySelector('#chat-message-submit').onclick = function(event) {
         var messageInputDom = document.querySelector('#chat-message-input');
-        //var messageUser = document.querySelector('#chat-message-user');       //
         var message = messageInputDom.value;
-        //var msgUser=messageUser.value;     //
         
-        chatSocket.send(JSON.stringify({
+        DATA = chatSocket.send(JSON.stringify({
             'message': message,
-            'user'   : "rashi",    //
+            'other_user'   : "rashi",
+            'msg_typed':true
         }));
+        console.log(DATA);
 
         //messageUser.value = ''; //
         messageInputDom.value = '';

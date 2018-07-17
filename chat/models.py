@@ -13,7 +13,7 @@ class Room(models.Model):
     """
 
     # Room title
-    title = models.CharField(max_length=255)
+    title = models.CharField(max_length=255,default="abss")
     ans = models.CharField(max_length=200,default="abss")
     max_players = models.IntegerField(default=0)
     room_status = models.CharField(max_length=100, default="Closed")   #status of room wheteher it is open or closed
