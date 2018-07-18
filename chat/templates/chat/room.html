@@ -29,7 +29,7 @@
             <div id='title' class="center">
               <h3>PLAYING ARENA</h3>
               <a href="{% url 'logout' %}">LOGOUT</a>
-          Hello, {{ request.user.username }}.
+                Hello, <span id="user-username">{{ request.user.username }}</span>.
 
             <!--{% if user.is_authenticated %}    {% endif %}-->
              
@@ -85,7 +85,7 @@
         if (message==""){
             var ok_msg = "";
             ok_msg = "<div class='message'>" +"<span>" + data.room_id+"</span">+
-                                        "<span class='username'>" + data.user + "</span>" +
+                                        "<span class='username'>" + data.username + "</span>" +
                                         "<span class='body'>" + data.message + "</span>" +
                                         "</div>";
             //msgdiv.append(ok_msg);
@@ -100,7 +100,7 @@
         else {
           var ok_msg = "";
             ok_msg = "<div class='message'>" +"<span>" + data.room_id+"</span">+
-                                        "<span class='username'>" + data.user + "</span>" +
+                                        "<span class='username'>" + data.username + "</span>" +
                                         "<span class='body'>" + data.message + "</span>" +
                                         "</div>";
             //msgdiv.append(ok_msg);
@@ -145,10 +145,11 @@
     document.querySelector('#chat-message-submit').onclick = function(event) {
         var messageInputDom = document.querySelector('#chat-message-input');
         var message = messageInputDom.value;
+        var other_user = document.getElementById('user-username').innerHTML;
         
         DATA = chatSocket.send(JSON.stringify({
             'message': message,
-            'other_user'   : "rashi",
+            'other_user'   : other_user,
             'msg_typed':true
         }));
         console.log(DATA);
