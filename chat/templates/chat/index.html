@@ -13,23 +13,25 @@
 
        
          
-        
+    
         {% for room in rooms %}
+            <h3> OPEN PLAYING ROOMS </h3>
             <li class="room-link" data-room-id="{{ room.id }}">{{ room }}</li>
         
         {% empty %}
-            <p class="empty">No chat rooms defined. Maybe make some in the <a href="{% url 'admin:index' %}">admin</a>?</p>
+            <em> NO PLAYING ROOM OPEN .....CREATE NEW ROOM ;)</em><br/>
+            <a href="{% url 'create_room' %}">Create New Room</a>
             
-            <a href="{% url 'index' %}">Create New Room</a>
-            <li class="room-link" data-room-id="{{ room.id }}">{{ room }}</li>
+            
         {% endfor %}
 </ul>
+
 <body>
-              What chat room would you like to enter?<br/>
-              <input id="room-name-input" type="text" size="100"/><br/>
-              <input id="room-name-submit" type="button" value="Enter"/>
-              
-            </body>
+        What chat room would you like to enter?<br/>
+        <input id="room-name-input" type="text" size="100"/><br/>
+        <input id="room-name-submit" type="button" value="Enter"/>
+        
+</body>
 
 <script>
     document.querySelector('#room-name-input').focus();
@@ -45,92 +47,3 @@
     };
 </script>
 </html>
-
- 
- 
-
-<!--
- <!DOCTYPE html>
-<html>
-{% load static %}
-<head>                         
-    <meta charset="utf-8"/>
-    <title>Chat Rooms</title>
-    <title>Data to backend</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link rel="stylesheet"  type="text/css" href="{% static 'chat/css/font.css' %}">
-</head>
-   <body>
-       <div id="room_btns">
-           <button id="create_room_btn" class="roombtn" onclick="createroom()">CREATE ROOM</button>
-           <button id="enter_room_btn" class="roombtn" onclick="enterroom()">JOIN ROOM</button>
-       </div>
-       <div id="create_room">
-           Enter the new room name to be created....<br/><br/>
-           <input id="new_room" type="text" size="100"/><br/><br/>
-           <input id="new_room_submit" type="button" value="Enter"/>
-       </div>
-       <div id="enter_room">
-           Enter the existing room name u want to enter in....<br/><br/>
-           <input id="exist_room" type="text" size="100"/><br/><br/>
-           <input id="exist_room_submit" type="button" value="Enter"/>
-       </div>
-<script>
-var btns = document.getElementById("room_btns");
-var create = document.getElementById("create_room");
-var enter = document.getElementById("enter_room");
-var existroomname=document.getElementById("exist_room");
-var newroomname=document.getElementById("new_room");
-var submit_new=document.getElementById("new_room_submit");
-var submit_exist = document.getElementById("exist_room_submit");
-
-console.log(newroomname)
-console.log(newroomname)
-console.log(newroomname)
-console.log(existroomname)
-
-function enterroom()
-{
-    enter.style.display='block';
-    btns.style.display="none";
-    existroomname.focus();
-    existroomname.onkeyup = function(e)
-    {
-        if(e.keyCode==13)   //enter is pressed
-            submit_exist.click();
-    };
-    submit_exist.onclick=function(){
-        window.location.pathname='/chat/'+(existroomname.value)+'/';
-        enter.style.display="none";
-        btns.style.display="block";
-    }
-    
-}
-function createroom()
-{
-    create.style.display='block';
-    btns.style.display="none";
-    newroomname.focus();
-    newroomname.onkeyup = function(e)
-    {
-        if(e.keyCode==13)   //enter is pressed
-            submit_new.click();
-    };
-    submit_new.onclick=function(){
-
-        window.location.pathname='/chat/'+ (newroomname.value)+'/';
-        create.style.display="none";
-        btns.style.display="block";
-    }
-    
-    
-}
-
-     
-
-       </script>
-   </body>
-</html> 
-
--->
-

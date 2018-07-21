@@ -25,12 +25,12 @@
     
     <div class="col s12 black darken-2 main-content" id="question-div">
           <!-- Question Div Goes Here -->
-          <div id='container' class="center">
-            <div id='title' class="center">
-              <h3>PLAYING ARENA</h3>
-              <a href="{% url 'logout' %}">LOGOUT</a>
-          Hello, {{ request.user.username }}.
-
+           <div id='title' class="center">
+               <h3>PLAYING ARENA</h3>
+               <a href="{% url 'logout' %}">LOGOUT</a>
+          
+                Hello, <span id="user-username">{{ request.user.username }}</span>.
+ 
             <!--{% if user.is_authenticated %}    {% endif %}-->
              
           
@@ -50,16 +50,13 @@
     var roomName = {{ room_name_json }};    //in views we used room_name_json  in room view as 
     //console.log(roomName);                  // 'room_name_json':mark_safe(json.dumps(room_name)
     
-
     
     
     //creating a Web Socket connection
     var chatSocket = new WebSocket('ws://' + window.location.host + '/ws/chat/' + roomName + '/');
      
     
-
     
-
     chatSocket.onopen = function (message) {
         
         
@@ -69,25 +66,27 @@
         //var ok_msg = "";
         //ok_msg = "<div class='contextual-message text-muted'>" + data.username + " joined the room!" +       " </div>"
     };
-
     chatSocket.onmessage = function(event) {
         var data = JSON.parse(event.data);
         var message = data['message'];
         var msg_typed = data['msg_typed'];
         var msg_typed = true;
         var other_user = "rashi";
-        var user = data['username'];
+        var username = data['username'];
         var room_id = data['room_id'];
         //var ques = data['ques'];
+        
         
         console.log("Got websocket message " + event.data);
         //var msgdiv = $("#room-" + data.room_id + " .messages");
         if (message==""){
-            var ok_msg = "";
-            ok_msg = "<div class='message'>" +"<span>" + data.room_id+"</span">+
-                                        "<span class='username'>" + data.user + "</span>" +
-                                        "<span class='body'>" + data.message + "</span>" +
-                                        "</div>";
+             var ok_msg = "";
+             ok_msg = "<div class='message'>" +"<span>" + data.room_id+"</span">+
+                                        "<span class='username'>" + data.username + "</span>" +
+                                         "<span class='body'>" + data.message + "</span>" +
+                                         "</div>";
+            
+            
             //msgdiv.append(ok_msg);
             //msgdiv.scrollTop(msgdiv.prop("scrollHeight"));
             console.log(data.username + ":" + data.message);
@@ -97,14 +96,16 @@
             document.querySelector('#chat-log').value += (data.username +':'+ message + '\n');
             //document.querySelector('#chat-log').value += (user + '\n');
             }
-        else {
-          var ok_msg = "";
-            ok_msg = "<div class='message'>" +"<span>" + data.room_id+"</span">+
-                                        "<span class='username'>" + data.user + "</span>" +
-                                        "<span class='body'>" + data.message + "</span>" +
-                                        "</div>";
+           else {
+           var ok_msg = "";
+             ok_msg = "<div class='message'>" +"<span>" + data.room_id+"</span">+
+                                       "<span class='username'>" + data.username + "</span>" +
+                                         "<span class='body'>" + data.message + "</span>" +
+                                         "</div>";
             //msgdiv.append(ok_msg);
             //msgdiv.scrollTop(msgdiv.prop("scrollHeight"));
+            
+            
             console.log(data.username + ":" + data.message);
             //console.log(ok_msg + 'this is ok_msg');
             //chatSocket.send("from server :" +message);
@@ -112,129 +113,50 @@
             document.querySelector('#chat-log').value += (data.username +':'+ message + '\n');
             //document.querySelector('#chat-log').value += (user + '\n');
          
-        }
-        
+             }
+          
 
+    };
+        
         //if (data['is_logged_in']) {document.querySelector('#chat-log').value += (data.username + ': Online');}
         //else {document.querySelector('#chat-log').value += (data.username + ': Offline');}
         
-
-    };
-
+    
     chatSocket.onclose = function() {
         console.error('Chat socket closed unexpectedly');
         setTimeout(function() {
       connect();
     }, 1000);
     };
-
     document.querySelector('#chat-message-input').focus();
-    document.querySelector('#chat-message-input').onkeyup = function(e) {
-        if (e.keyCode === 13) {  // enter, return
-            document.querySelector('#chat-message-submit').click();
-        }
-    };
-                                                                          
-  //  document.querySelector('#chat-message-user').focus();
-  //  document.querySelector('#chat-message-user').onkeyup = function(e) {
-  //      if (e.keyCode === 13) {  // enter, return
-  //          document.querySelector('#chat-message-submit').click();
-  //      }
-  //  };
+          document.querySelector('#chat-message-input').onkeyup = function(e) {
+              if (e.keyCode === 13) {  // enter, return
+                  document.querySelector('#chat-message-submit').click();
+              }
+          };
+                                                                                
+        //  document.querySelector('#chat-message-user').focus();
+        //  document.querySelector('#chat-message-user').onkeyup = function(e) {
+        //      if (e.keyCode === 13) {  // enter, return
+        //          document.querySelector('#chat-message-submit').click();
+        //      }
+        //  };
+          document.querySelector('#chat-message-submit').onclick = function(event) {
+               var messageInputDom = document.querySelector('#chat-message-input');
+               var message = messageInputDom.value;
+              var user_ = document.getElementById('user-username').innerHTML;
+               
+                       DATA = chatSocket.send(JSON.stringify({
+                   'message': message,
+                  'other_user'   : "rashi",
+                  "user_"     :user_,
+                   'msg_typed':true
+               }));
+               console.log("daaatttaaaaaa");
+               console.log(DATA);
+              //messageUser.value = ''; //
+              messageInputDom.value = '';
+        };
 
-    document.querySelector('#chat-message-submit').onclick = function(event) {
-        var messageInputDom = document.querySelector('#chat-message-input');
-        var message = messageInputDom.value;
-        
-        DATA = chatSocket.send(JSON.stringify({
-            'message': message,
-            'other_user'   : "rashi",
-            'msg_typed':true
-        }));
-        console.log(DATA);
-
-        //messageUser.value = ''; //
-        messageInputDom.value = '';
-    };
 </script>
 </html>
-
-
-
-<!--
-<!DOCTYPE html>
-  <meta charset="utf-8" />
-  <title>WebSocket Test</title>
-  <script language="javascript" type="text/javascript">
-
-  var wsUri = "wss://echo.websocket.org/";
-  var server = new WebSocketServer("ws://localhost:8181");
-  var clients = new List<IWebSocketConnection>();
-  var output;
-  
-
-  
-
-
-
-  function init()
-  {
-    output = document.getElementById("output");
-    testWebSocket();
-  }
-
-  function testWebSocket()
-  {
-    websocket = new WebSocket(wsUri);
-    websocket.onopen = function(evt) { onOpen(evt) };
-    websocket.onclose = function(evt) { onClose(evt) };
-    websocket.onmessage = function(evt) { onMessage(evt) };
-    websocket.onerror = function(evt) { onError(evt) };
-  }
-
-  function onOpen(evt)
-  {
-    writeToScreen("CONNECTED");
-    doSend("WebSocket rocks");
-  }
-
-  function onClose(evt)
-  {
-    writeToScreen("DISCONNECTED");
-
-  }
-
-  function onMessage(evt)
-  {
-    writeToScreen('<span style="color: blue;">RESPONSE: ' + evt.data+'</span>');
-    websocket.close();
-  }
-
-  function onError(evt)
-  {
-    writeToScreen('<span style="color: red;">ERROR:</span> ' + evt.data);
-  }
-
-  function doSend(message)
-  {
-    writeToScreen("SENT: " + message);
-    websocket.send(message);
-  }
-
-  function writeToScreen(message)
-  {
-    var pre = document.createElement("p");
-    pre.style.wordWrap = "break-word";
-    pre.innerHTML = message;
-    output.appendChild(pre);
-  }
-
-  window.addEventListener("load", init, false);
-
-  </script>
-
-  <h2>WebSocket Test</h2>
-
-  <div id="output"></div>
-          
--->

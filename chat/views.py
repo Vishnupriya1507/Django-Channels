@@ -18,26 +18,24 @@ def get_current_users():
     active_sessions = Session.objects.filter(expire_date__gte=timezone.now())
     user_id_list = []
     logged_in_user = 0
-    #print(type(user_id_list))
-    #status = 'Offline'
+    
     for session in active_sessions:
         data = session.get_decoded()
         user_id_list.append(data.get('_auth_user_id', None))
         
-        #user_id_list.append(('logged_in_user'))
-    
+        
 
     # Query all logged in users based on id list
     
     return User.objects.filter(id__in=user_id_list)
+
 #@login_required
 def index(request):
 
-    #rooms = Room.objects.order_by("title")
     
     
     if request.user.is_authenticated:
-        user=request.user 
+        user = request.user 
         try:
                 player = Player()
                 player.name = user
@@ -47,32 +45,36 @@ def index(request):
                                                          
     else:
         return HttpResponseRedirect('/accounts/login/')
-    if Room.objects.filter(room_status="Open"):
-        rooms = Room.objects.filter(room_status="Open")
-        print(rooms)
-        return render(request, 'chat/index.html', {'rooms':rooms,})
-    room_name=Room()
-    return HttpResponseRedirect('/chat/')
+    
+    rooms = Room.objects.filter(room_status="Open")
+    print(rooms)
+    return render(request, 'chat/index.html', {'rooms':rooms,})
+    
+
 
 #@login_required
 def room(request, room_name):
     prob = Problem.objects.order_by('ques_no')
     users=list(get_current_users())
 
-    #users.append({'logged_in_user':True})
+    
     for user in users:
         user.status = 'Online' 
-    count=0           #counting no of open rooms
+    
+
+    count=0                     #counting no of open rooms
     for i in Room.objects.all():
         print(i)
         if i.room_status=='Open':
             print(type(i.room_status))
             count+=1
-            break         #breaks even if one room has not touched maximum players
+            break               #breaks even if one room has not touched max players
     
 
     print(count)           
     print(list(Room.objects.all()))
+    
+
     if count>0:
         
         if Room.objects.filter(title=room_name):
@@ -103,38 +105,33 @@ def room(request, room_name):
             print("except")
             return HttpResponseRedirect('/chat/')
             
-    else:
+    else:                     # else part is count = 0 here means no rooms having room_status = "Open"
         print("else")
-        #create_room()
-        room_name = Room()
-        name = Room.objects.create(title=room_name)
-        #name.max_players+=1
-        name.save()
-
+        create_room()
+        
      
-        return render(request, 'chat/room.html', 
-        {'room_name_json': mark_safe(json.dumps(room_name)),
-        #'prob':prob,'users':users,
-        'room_status':name.room_status
-        })
-
-
-
-
 
 @login_required
-def create_room(request):
+def create_room(request):     # it is called only when all rooms have reached their max no of players i.e 20
     room_name = Room()
-    room_name.title="bcbd"
-    room_name.save()
-    #return HttpResponseRedirect('/')
-    return render(request, 'chat/room.html', 
-        {'room_name_json': mark_safe(json.dumps(room_name)),
-        #'prob':prob,'users':users,
-        'room_status':name.room_status
-        })
-   
-#A Feature Of Django Session----NOT used in project
+
+    count = 0                 # counts number of rooms which are closed and then makes new room accordingily 
+    for room in Room.objects.all():
+        count +=1
+    count +=1
+    name = Room.objects.create(title = "room"+str(count))
+    name.max_players+=1
+    name.room_status="Open"
+    name.save()
+    name = "room"+str(count+1)
+    url = '/chat/'+ name+'/'
+    return HttpResponseRedirect(url)
+    
+
+
+# A Feature Of Django Session----NOT used in project
+
+
 """
 def logout(request):
     try:

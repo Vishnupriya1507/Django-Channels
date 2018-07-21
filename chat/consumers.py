@@ -5,7 +5,7 @@ from . models import Room,Problem,Player
 from django.contrib.auth.models import User
 from . import views
 from chat.views import get_current_users
-from .utils import get_room_or_error
+
 
 class ChatConsumer(WebsocketConsumer):
     def connect(self):
@@ -67,13 +67,15 @@ class ChatConsumer(WebsocketConsumer):
             self.user.status = 0   
         
         """
+        SYNTAX--
+
         if self.room_group_name =="check_room1":
             async_to_sync(self.channel_layer.group_discard)(      #  group_discard("group_name","channel_name")
-            "vishnis" ,self.channel_name)  
+            self.room_group_name ,self.channel_name)  
                                                                  ### when only one channel then we just used pass
         elif self.room_group_name =="lobby":
             async_to_sync(self.channel_layer.group_discard)(
-                "lobby",self.channel_name)
+                self.room_group_name,self.channel_name)
         
         else:                                                  # THIS BLOCK OF CODE -- is for disconnecting user 
             self.close()                                      # who entered room name other than what are mentioned
@@ -88,11 +90,12 @@ class ChatConsumer(WebsocketConsumer):
         text_data_json = json.loads(text_data)                 #text_data is received from frontend
         message = text_data_json['message']
         msg_typed = text_data_json['msg_typed']
-        other_user = text_data_json['other_user']
-        #print(msg_typed) ----{"message":"","user":"rashi","msg_typed":true}
+        user_ = text_data_json['user_']
+        
+        #print(msg_typed) ----{"message":"","user_":"rashi","msg_typed":true}
         
         print(text_data_json)
-        #if msg_typed==True:
+        
                                                             
 
         
@@ -116,16 +119,18 @@ class ChatConsumer(WebsocketConsumer):
         print(type(self.ques))
         
         print(self.user)
-        #room = get_room_or_error(self.room_id, self.scope["user"])
         
-        if message=="":  #[this is for sending Question]
+        
+        if message=="":      #[this is for sending Question]
+            
+
             # Send message to room group
             async_to_sync(self.channel_layer.group_send)(            #SYNTAX-- group_send("group_name",{"poinies":True})
                self.room_group_name,{
                 'type': 'chat_message',
                 'message': "", 
                 'username':"From server :",                          # Sends an event to a group.
-                                                                     #An event has a special 'type' key corresponding  'message': message                                             #
+                                                                     # An event has a special 'type' key corresponding  'message': message                                             #
                 'room_id':self.room_id ,                             # 'message': message         
                 'room_group_name': self.room_group_name,
                 'user.status':'Online',
@@ -142,67 +147,28 @@ class ChatConsumer(WebsocketConsumer):
                self.room_group_name,{
                 'type': 'chat_message',
                 'message': message,  
-                'username':other_user,                               # Sends an event to a group.
+                'username':user_,                                    # Sends an event to a group.
                                                                      #An event has a special 'type' key corresponding  'message': message                                             #
                 'room_id':self.room_id ,                             # 'message': message         
                 'room_group_name': self.room_group_name,
                 'user.status':'Online',
-                #'ques': self.ques,
                 'msg_typed':True
                   })         
 
-        """
-
-        async_to_sync(self.channel_layer.group_send)(            # group_send("group_name",{"poinies":True})
-           self.room_group_name,
-           {'type': 'chat_message',
-            'message ': "Correct Answer By :" +str(player),  
-            'username':'From Server ',                           # Sends an event to a group.
-                                                                 #An event has a special 'type' key corresponding  'message': message                                             #
-            'room_id':self.room_id ,                             # 'message': message         
-            'room_group_name': self.room_group_name,
-            'user.status':'Online',
-            'ques': self.ques
-            })  
-        async_to_sync(self.channel_layer.group_send)(            # group_send("group_name",{"poinies":True})
-           self.room_group_name,
-           {'type': 'chat_message',
-            'message ': "NEXT QUES :" +str(player),  
-            'username':'From Server ',                           # Sends an event to a group.
-                                                                 #An event has a special 'type' key corresponding  'message': message                                             #
-            'room_id':self.room_id ,                             # 'message': message         
-            'room_group_name': self.room_group_name,
-            'user.status':'Online',
-            'ques': self.ques
-            })  
-        """
-
-
-
-        '''                                                      
-        if self.room_group_name =="lobby":
-            async_to_sync(self.channel_layer.group_send)(
-              "lobby",{'type': 'chat.message','message':message,'username':self.scope["user"].username,'room_id':self.room_id})
         
 
-        print(self.scope["user"].username + "  heyyyyy")
-        
-        #print(self.room_id)
-        
 
-        #self.send(text_data=json.dumps({'message': message }))     # self.send() sends msg only to one channel 
-        '''
-
+    
 
     # Receive message from room group
     def chat_message(self, event):
         message = event['message']
         msg_typed=event['msg_typed']
-        #other_user = event['other_user']
+        user_= event['username']
+        
         print(event)
-        #print(msg_typed)
-        #message['user']="rasss"
-        #user = event['username']
+        # {'message': 'football', 'msg_typed': True, 'other_user': 'rashi', 'user_': 'trs'}
+
 
 
         if message=="":    
@@ -217,7 +183,7 @@ class ChatConsumer(WebsocketConsumer):
         else:
             msg_typed = True
             self.send(text_data = json.dumps({'message': message,
-                'username':self.scope['user'].username,
+                'username':user_,
                 'room_id':event['room_id'],
                 'room_group_name': event['room_group_name'],
                 'user.status':'Online',
@@ -237,7 +203,7 @@ class ChatConsumer(WebsocketConsumer):
                 self.room.save()
 
 
-                self.send(text_data = json.dumps({'message': "Correct Answer By : " + self.scope['user'].username,
+                self.send(text_data = json.dumps({'message': "Correct Answer By : " + user_,
                     'username':"FROM SERVER :",
                     'room_id':event['room_id'],
                     'room_group_name': event['room_group_name'],
@@ -254,19 +220,13 @@ class ChatConsumer(WebsocketConsumer):
                 'user.status':'Online',
                 'msg_typed':False
                 }))
-            #ans = Problem.objects.get(pk=1).ques_answer
-            #self.send(text_data=json.dumps({'message': "YES YOU ARE RIGHT!!!"}))
-            print("sesdbgs")   
-        '''
-            if message==ans:
+        print("sesdbgs")   
+        
 
-                self.send(text_data=json.dumps({'message': "YES YOU ARE RIGHT!!!"}))
-            else:
-                self.send(text_data=json.dumps({'message':"YOU ARE WRONG !!"})) 
-            print(ans)
+        #SYNTAX--
         # Send message to WebSocket
         # self.send(text_data=json.dumps({'message': message})) 
-        '''
+        
     
           
        
