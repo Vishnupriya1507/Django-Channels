@@ -1,0 +1,140 @@
+body{
+	overflow: hidden;
+}
+.bodybg{
+	position: absolute;
+	width: 100vw;
+	top: 0;
+	left: 0;
+	height: 100vh;
+	filter: blur(3px)
+}
+#bosmlogo{
+	position: absolute;
+	top: 2vh;
+	right: 2vw;
+	height: 20vh;
+	width: 20vh;
+}
+#bosmlogo img{
+	width: 100%;
+	height: 100%;
+	position: absolute;
+}
+#title,#titlep{
+	position: absolute;
+	top: 30vh;
+	left: 10vw;
+	width: 80vw;
+	height: 40vh;
+	word-wrap: break-word;
+	white-space: normal;
+	font-size: 20vh;
+	font-family: "kanji";
+}
+.text{
+	text-align: center;
+	color: whitesmoke;
+}
+#cc{
+	position: absolute;
+	top: 4vh;
+	left: 2vw;
+	height: 16vh;
+	font-size: 8vh;
+	color: whitesmoke;
+	font-family: "Montserrat";
+}
+#cc img{
+	height: 100%;
+}
+#loginLink{
+	position: absolute;
+    background-color: midnightblue;
+    border: none;
+    color: papayawhip;
+	padding: 2vh 2vw 2vh 2vw;
+	left: 45vw;
+	top: 80vh;
+	height: 5vh;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 5vh;
+	border-radius: 3px;
+    cursor: pointer;
+}
+@media (max-width: 768px){
+	
+}
+@media all and (device-width: 1024px) and (device-height: 768px) and (orientation:landscape) {
+	#title{
+		font-size: 15vh;
+		height: 30vh;
+	}
+	#loginLink{
+		  left:42vw;
+		  top: 70vh;
+		  font-size: 3.75vh;
+		  height: 3.75vh;
+	  }
+}
+@media only screen 
+  and (min-device-width: 1024px) 
+  and (max-device-width: 1366px) 
+  and (orientation: landscape) 
+  and (-webkit-min-device-pixel-ratio: 1.5){
+	 #title{
+		font-size: 15vh;
+		 height: 30vh;
+	} 
+	  #loginLink{
+		  left:42vw;
+		  top: 70vh;
+		  font-size: 3.75vh;
+		  height: 3.75vh;
+	  }
+}
+@media screen and (orientation:portrait) {
+	#title{display: none;}
+}
+@media screen and (orientation:landscape) {
+	#titlep{display: none;}
+}
+@media screen and (orientation:portrait) {
+#titlep{
+	top: 30vh;
+	left: 10vw;
+	width: 80vw;
+	height: 36vw;
+	font-size: 12vw;
+}
+	#bosmlogo{
+	right: 5vw;
+	height: 10vh;
+	width: 10vh;
+}
+#cc{
+	left: 5vw;
+	height: 8vh;
+	top: 3vh;
+}
+	#loginLink{
+		font-size: 6vw;
+		left: 40vw;
+		height: 6vw;
+		top: 65vh;
+	}
+}
+
+
+/*------------------Importing fonts-------------------*/
+@font-face {
+    font-family: 'Montserrat';
+    src: url(Fonts/Montserrat-BoldItalic.ttf) format('opentype');
+}
+@font-face {
+    font-family: 'kanji';
+    src: url(Fonts/Kanji.ttf) format('truetype');
+}
+/*----------------------------------------------------*/

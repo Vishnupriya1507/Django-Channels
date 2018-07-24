@@ -6,6 +6,12 @@ from django.db import models
 from django.db import models
 from django.contrib.auth.models import User
 
+from allauth.account.adapter import DefaultAccountAdapter
+
+class MyAccountAdapter(DefaultAccountAdapter):    
+    def is_open_for_signup(self, request):
+        return False
+
 
 class Room(models.Model):
     """
@@ -41,7 +47,7 @@ class Player(models.Model):
     score = models.IntegerField(default=0)
     room = models.CharField(max_length=10000)
     ans_given = models.CharField(max_length=100000)
-    ans_chosen = models.CharField(max_length=100000)
+    ans_status = models.CharField(max_length=100000,default="offline")
 
     def __str__(self):
         return self.name.username

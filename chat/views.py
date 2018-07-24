@@ -55,20 +55,52 @@ def index(request):
 #@login_required
 def room(request, room_name):
     prob = Problem.objects.order_by('ques_no')
-    users=list(get_current_users())
+    users = list(get_current_users())
+
+    print(request.user)
+    player_joined = request.user  #--------- player logging in
+    
+    player = Player.objects.get(name=player_joined)
+    player.room = room_name
+    player.save()
+    
+    
+    dict_ = {}                #-------------{player_name : player_score}
+        
+    players = Player.objects.all()
+    
+    for player in players:
+        
+        if player.room ==room_name:
+            
+            print(player.name)
+    
+            dict_[player]= player.score
+            #self.dict_[player_ob]=str(self.dict_[player_ob]) 
+            #print(type(self.dict_[player_ob]))
+    
+            
+    
+    print(dict_)                #-----{<Player: abc>: 1800, <Player: trs>: 10000, <Player: f20170325>: 1100}
 
     
+
+
     for user in users:
         user.status = 'Online' 
     
+    
+           
 
-    count=0                     #counting no of open rooms
+         
+
+    count=0                     #-------counting no of open rooms
     for i in Room.objects.all():
-        print(i)
+        #print(i)
         if i.room_status=='Open':
             print(type(i.room_status))
             count+=1
-            break               #breaks even if one room has not touched max players
+            break               #--------breaks even if one room has not touched max players
     
 
     print(count)           
@@ -96,6 +128,7 @@ def room(request, room_name):
             return render(request, 'chat/room.html',
             {'room_name_json': mark_safe(json.dumps(room_name)),
             #'user':request.user.username,
+            
             'users':users,
             'room_status':name.room_status
             })
@@ -105,7 +138,7 @@ def room(request, room_name):
             print("except")
             return HttpResponseRedirect('/chat/')
             
-    else:                     # else part is count = 0 here means no rooms having room_status = "Open"
+    else:                     #------------- else part is count = 0 here means no rooms having room_status = "Open"
         print("else")
         create_room()
         
@@ -126,13 +159,17 @@ def create_room(request):     # it is called only when all rooms have reached th
     name = "room"+str(count+1)
     url = '/chat/'+ name+'/'
     return HttpResponseRedirect(url)
+
+def login(request):
+    return render(request,'registration/login.html/')
+
     
 
 
 # A Feature Of Django Session----NOT used in project
 
-
 """
+
 def logout(request):
     try:
         del request.session['member_id']
@@ -141,6 +178,8 @@ def logout(request):
     return HttpResponse("You're logged out.")
 
 """
+
+
 
 
         

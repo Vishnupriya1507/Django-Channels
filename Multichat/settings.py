@@ -167,3 +167,5 @@ LOGIN_REDIRECT_URL='/chat/'
 LOGOUT_REDIRECT_URL = '/accounts/login/'
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
+ACCOUNT_ADAPTER = 'chat.models.MyAccountAdapter'

@@ -5,6 +5,7 @@ from . models import Room,Problem,Player
 from django.contrib.auth.models import User
 from . import views
 from chat.views import get_current_users
+from django.core import serializers
 
 
 class ChatConsumer(WebsocketConsumer):
@@ -36,7 +37,7 @@ class ChatConsumer(WebsocketConsumer):
         
         # Join room group
         '''
-        async_to_sync(self.channel_layer.group_add)(                       # group_add("group_name","channel_name")
+        async_to_sync(self.channel_layer.group_add)(                     # group_add("group_name","channel_name")
             self.room_group_name,
             self.channel_name
         )
@@ -56,9 +57,12 @@ class ChatConsumer(WebsocketConsumer):
     def disconnect(self):
         # Leave room group
         
-        async_to_sync(self.channel_layer.group_discard)(      #  group_discard("group_name","channel_name")
-            self.room_group_name ,self.channel_name)
         
+
+        self.player = request.user
+        print("yoyoyoyo")
+        print(player)
+        Player.objects.get(name=player).delete()
         users=list(get_current_users())
         #users.append({'logged_in_user':True})
         print(type(get_current_users()))
@@ -66,11 +70,14 @@ class ChatConsumer(WebsocketConsumer):
         for user in users:
             self.user.status = 0   
         
+        async_to_sync(self.channel_layer.group_discard)(      #SYNTAX----group_discard("group_name","channel_name")
+            self.room_group_name ,self.channel_name)
+        
         """
         SYNTAX--
 
         if self.room_group_name =="check_room1":
-            async_to_sync(self.channel_layer.group_discard)(      #  group_discard("group_name","channel_name")
+            async_to_sync(self.channel_layer.group_discard)(     #  group_discard("group_name","channel_name")
             self.room_group_name ,self.channel_name)  
                                                                  ### when only one channel then we just used pass
         elif self.room_group_name =="lobby":
@@ -92,17 +99,67 @@ class ChatConsumer(WebsocketConsumer):
         msg_typed = text_data_json['msg_typed']
         user_ = text_data_json['user_']
         
-        #print(msg_typed) ----{"message":"","user_":"rashi","msg_typed":true}
+        #print(msg_typed) ----   {"message":"","user_":"rashi","msg_typed":true}
         
         print(text_data_json)
-        
-                                                            
-
-        
 
         users = list(get_current_users())
+        for user in users:
+            user.status = 'Online' 
+        
+        
         self.user = User.objects.get(username=self.scope["user"].username)
-        self.player = Player.objects.get(name = self.user)
+        print(self.user)
+
+        self.player = Player.objects.get(name = self.user)  #--------- player logging in
+        
+        print(self.player)
+        
+        
+        
+
+        
+
+
+        
+        self.dict_ = {}                #-------------{player_name : player_score}
+        
+        players = Player.objects.all()
+
+        print("heyyyyheyyyyheyyyyheyyyyheyyyyheyyyy")
+        print(type(players))
+        
+
+
+        data = []
+        print(players)
+        for player_ob in players:
+            
+            if player_ob.room ==self.room_name:
+                
+                print(type(player_ob.name))
+                d = []
+                d.append(player_ob.name.username)
+                d.append(player_ob.score)
+                print(d)
+                data.append(d)
+                self.dict_["room_name"] = self.room_name
+                self.dict_["data"]=data
+                        
+                
+        
+        print(data)                #-----[['abc', 2100], ['f20170325', 1100]]
+
+        print(self.dict_)          #-----{"room_name": "room1", "data": [["abc", 2100], ["f20170325", 1100]]}
+           
+        
+
+
+
+
+        
+        
+        
         print(type(self.user))
         self.room = Room.objects.get(title =self.room_group_name)
         print("receive")
@@ -121,7 +178,7 @@ class ChatConsumer(WebsocketConsumer):
         print(self.user)
         
         
-        if message=="":      #[this is for sending Question]
+        if message=="":      #----------[this is for sending Question]
             
 
             # Send message to room group
@@ -132,12 +189,18 @@ class ChatConsumer(WebsocketConsumer):
                 'username':"From server :",                          # Sends an event to a group.
                                                                      # An event has a special 'type' key corresponding  'message': message                                             #
                 'room_id':self.room_id ,                             # 'message': message         
-                'room_group_name': self.room_group_name,
+                                                                     # to the name of the method that should  be invoked on consumers that receive the event.
+                'room_group_name': self.room_group_name,  #---------room-name
+                
                 'user.status':'Online',
+                
                 'ques': self.ques,
-                'msg_typed':False
-                })                                                   # to the name of the method that should 
-            print("sd")                                              # be invoked on consumers that receive the event.
+                
+                'msg_typed':False,
+                
+                'dict_':self.dict_    #-----{"room_name": "room1", "data": [["abc", 2100], ["f20170325", 1100]]}
+                })                                                    
+            print("sd")                                              
         
         
 
@@ -150,9 +213,14 @@ class ChatConsumer(WebsocketConsumer):
                 'username':user_,                                    # Sends an event to a group.
                                                                      #An event has a special 'type' key corresponding  'message': message                                             #
                 'room_id':self.room_id ,                             # 'message': message         
+                
                 'room_group_name': self.room_group_name,
+                
                 'user.status':'Online',
-                'msg_typed':True
+                
+                'msg_typed':True,
+                
+                'dict_':self.dict_    #-----{"room_name": "room1", "data": [["abc", 2100], ["f20170325", 1100]]}
                   })         
 
         
@@ -166,9 +234,10 @@ class ChatConsumer(WebsocketConsumer):
         msg_typed=event['msg_typed']
         user_= event['username']
         
-        print(event)
+        dict_=event['dict_']    #-----{"room_name": "room1", "data": [["abc", 2100], ["f20170325", 1100]]}
+        
         # {'message': 'football', 'msg_typed': True, 'other_user': 'rashi', 'user_': 'trs'}
-
+        print(event)
 
 
         if message=="":    
@@ -177,7 +246,10 @@ class ChatConsumer(WebsocketConsumer):
                 'room_id':event['room_id'],
                 'room_group_name': event['room_group_name'],
                 'user.status':'Online',
-                'msg_typed':False
+                'msg_typed':False,
+                
+
+                'dict_':dict_     #-----{"room_name": "room1", "data": [["abc", 2100], ["f20170325", 1100]]}
                 }))
         
         else:
@@ -187,7 +259,9 @@ class ChatConsumer(WebsocketConsumer):
                 'room_id':event['room_id'],
                 'room_group_name': event['room_group_name'],
                 'user.status':'Online',
-                'msg_typed':True
+                'msg_typed':True,
+                
+                'dict_':dict_      #-----{"room_name": "room1", "data": [["abc", 2100], ["f20170325", 1100]]}
                 }))
 
             self.player.ans_given = message
@@ -208,7 +282,9 @@ class ChatConsumer(WebsocketConsumer):
                     'room_id':event['room_id'],
                     'room_group_name': event['room_group_name'],
                     'user.status':'Online',
-                    'msg_typed':False
+                    'msg_typed':False,
+                    
+                    'dict_':dict_   #-----{"room_name": "room1", "data": [["abc", 2100], ["f20170325", 1100]]}
                 })) 
             
 
@@ -218,7 +294,9 @@ class ChatConsumer(WebsocketConsumer):
                 'room_id':event['room_id'],
                 'room_group_name': event['room_group_name'],
                 'user.status':'Online',
-                'msg_typed':False
+                'msg_typed':False,
+                
+                'dict_':dict_       #-----{"room_name": "room1", "data": [["abc", 2100], ["f20170325", 1100]]}
                 }))
         print("sesdbgs")   
         

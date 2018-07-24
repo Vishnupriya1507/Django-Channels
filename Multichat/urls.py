@@ -20,6 +20,7 @@ from . import views
 urlpatterns = [
     url(r'^chat/', include('chat.urls')),
     url(r'^accounts/', include('allauth.urls')),
+    url(r'^accounts/mylogin/', views.login,name='login'),
     url(r'^admin/', admin.site.urls),
     url(r'^$', views.main, name='main'),
     url(r'^accounts/logout/',views.logout,name='logout'),   # FOR CHECKING DJANGO SESSION
