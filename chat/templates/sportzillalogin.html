@@ -22,8 +22,12 @@
 		<div id="cc" class="text">
 			<img alt="cclogo" src="{% static 'chat/icons/cclogo.jpg' %}">
 		</div>
+		<div id="content-wrapper">
+      <h1 style="font-family:'sedgwick'">QRIOUS</h1>
+      <button class="btn" onclick="window.location.assign('/accounts/google/login/?process=login')">LOG IN</button>
+    </div>
 
-        <a href="https://accounts.google.com/signin/oauth/oauthchooseaccount?client_id=504459446204-v1jtm0h04mgv7ajnipa48d2g6ijp4f68.apps.googleusercontent.com&as=sOIWyVVruE4j17qK5GAf4Q&destination=http%3A%2F%2Flocalhost%3A8000&approval_state=!ChROcUdVcFRqaEVvQTVnWFFmMjYwVBIfQS1yTVlkMmwxYllYOEhuU1JuY2dubXJ1OE9UQ1RCWQ%E2%88%99ANKMe1QAAAAAW1hnmGqfauVcVmu9LA__9PwZGa8raykk&oauthgdpr=1&xsrfsig=AHgIfE-cbPKR_tt5HMEJQie9Dp-MlfeyKg&flowName=GeneralOAuthFlow" id="loginLink">LOGIN</a>
+        <a href="/accounts/google/login/?process=login" id="loginLink">LOGIN</a>
 
 		
 	</body>

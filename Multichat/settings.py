@@ -61,7 +61,7 @@ ROOT_URLCONF = 'Multichat.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -162,9 +162,8 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_KEY="504459446204-v1jtm0h04mgv7ajnipa48d2g6ijp4f68.app
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = "p-GO-1YXrMWWD5AmYFZPH29A"
 
 
-
+#LOGIN_URL='accounts/google/login/?process=login'
 LOGIN_REDIRECT_URL='/chat/' 
-LOGOUT_REDIRECT_URL = '/accounts/login/'
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 

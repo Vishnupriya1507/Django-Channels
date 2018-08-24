@@ -29,6 +29,10 @@ def get_current_users():
     
     return User.objects.filter(id__in=user_id_list)
 
+def logout(request):
+    logout(request)
+    return HttpResponseRedirect('https://www.google.com/accounts/Logout?continue=https://appengine.google.com/_ah/logout?continue=http://127.0.0.1:8000')
+
 #@login_required
 def index(request):
 
@@ -129,7 +133,7 @@ def room(request, room_name):
             {'room_name_json': mark_safe(json.dumps(room_name)),
             #'user':request.user.username,
             
-            'users':users,
+            #'users':users,
             'room_status':name.room_status
             })
             
@@ -152,11 +156,11 @@ def create_room(request):     # it is called only when all rooms have reached th
     for room in Room.objects.all():
         count +=1
     count +=1
-    name = Room.objects.create(title = "room"+str(count))
+    name = Room.objects.create(title = "Room"+str(count))
     name.max_players+=1
     name.room_status="Open"
     name.save()
-    name = "room"+str(count+1)
+    name = "Room"+str(count+1)
     url = '/chat/'+ name+'/'
     return HttpResponseRedirect(url)
 

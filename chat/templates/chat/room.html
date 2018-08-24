@@ -13,15 +13,10 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/reconnecting-websocket/1.0.0/reconnecting-websocket.min.js"></script>
     
 </head>
-<ul>
-    {% for user in users %}
-      <!-- NOTE: We escape HTML to prevent XSS attacks. -->
-      
-      <li data-username="{{ user.username|escape }}">
-        {{ user.username|escape }}: {{ user.status|default:'Offline' }}
-      </li>
-    {% endfor %}
-        </ul>
+
+    
+    
+        
     
     <div class="col s12 black darken-2 main-content" id="question-div">
           <!-- Question Div Goes Here -->

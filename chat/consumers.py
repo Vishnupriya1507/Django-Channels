@@ -10,19 +10,27 @@ from django.core import serializers
 
 class ChatConsumer(WebsocketConsumer):
     def connect(self):
+        
         self.room_name = self.scope['url_route']['kwargs']['room_name']    # here we are getting room name from url
         
         self.room_group_name = '%s' % self.room_name                       # here its making group name which i
                                                                            # made it same as room name here
         
         for i in Room.objects.all():
+        
             if str(i)==self.room_group_name:
+        
                 self.room_id=i.id
+        
                 break
+        
         async_to_sync(self.channel_layer.group_add)(                       # group_add("group_name","channel_name")
+        
             self.room_group_name,
+        
             self.channel_name
         )
+        
         self.accept()
 
                                      
@@ -60,17 +68,28 @@ class ChatConsumer(WebsocketConsumer):
         
 
         self.player = request.user
+        
         print("yoyoyoyo")
+        
         print(player)
+        
         Player.objects.get(name=player).delete()
+        
         users=list(get_current_users())
+        
         #users.append({'logged_in_user':True})
+        
         print(type(get_current_users()))
+        
         print(users)
+        
         for user in users:
+        
             self.user.status = 0   
         
+        
         async_to_sync(self.channel_layer.group_discard)(      #SYNTAX----group_discard("group_name","channel_name")
+        
             self.room_group_name ,self.channel_name)
         
         """
@@ -94,9 +113,13 @@ class ChatConsumer(WebsocketConsumer):
                                                                      
     # Receive message from WebSocket
     def receive(self, text_data):
+        
         text_data_json = json.loads(text_data)                 #text_data is received from frontend
+        
         message = text_data_json['message']
+        
         msg_typed = text_data_json['msg_typed']
+        
         user_ = text_data_json['user_']
         
         #print(msg_typed) ----   {"message":"","user_":"rashi","msg_typed":true}
@@ -104,11 +127,14 @@ class ChatConsumer(WebsocketConsumer):
         print(text_data_json)
 
         users = list(get_current_users())
+        
         for user in users:
+        
             user.status = 'Online' 
         
         
         self.user = User.objects.get(username=self.scope["user"].username)
+        
         print(self.user)
 
         self.player = Player.objects.get(name = self.user)  #--------- player logging in
@@ -127,23 +153,33 @@ class ChatConsumer(WebsocketConsumer):
         players = Player.objects.all()
 
         print("heyyyyheyyyyheyyyyheyyyyheyyyyheyyyy")
+        
         print(type(players))
         
 
 
         data = []
+        
         print(players)
+        
         for player_ob in players:
             
             if player_ob.room ==self.room_name:
                 
                 print(type(player_ob.name))
+                
                 d = []
+                
                 d.append(player_ob.name.username)
+                
                 d.append(player_ob.score)
+                
                 print(d)
+                
                 data.append(d)
+                
                 self.dict_["room_name"] = self.room_name
+                
                 self.dict_["data"]=data
                         
                 
@@ -161,16 +197,25 @@ class ChatConsumer(WebsocketConsumer):
         
         
         print(type(self.user))
+        
         self.room = Room.objects.get(title =self.room_group_name)
+        
         print("receive")
+        
         print(type(self.room))
+        
         self.player.ans_given = message
+        
         self.player.room = self.room.title
+        
         self.player.save()
         
         self.ans= Problem.objects.get(pk= self.room.ques_num ).ques_answer 
+        
         print(self.ans)
+        
         self.ques_No = Problem.objects.get(pk = self.room.ques_num)
+        
         self.ques = self.ques_No.prob_ques
         
         print(type(self.ques))
@@ -206,10 +251,15 @@ class ChatConsumer(WebsocketConsumer):
 
         else:
             msg_typed = True
+            
             async_to_sync(self.channel_layer.group_send)(            # group_send("group_name",{"poinies":True})
+            
                self.room_group_name,{
+            
                 'type': 'chat_message',
+            
                 'message': message,  
+            
                 'username':user_,                                    # Sends an event to a group.
                                                                      #An event has a special 'type' key corresponding  'message': message                                             #
                 'room_id':self.room_id ,                             # 'message': message         
@@ -230,8 +280,11 @@ class ChatConsumer(WebsocketConsumer):
 
     # Receive message from room group
     def chat_message(self, event):
+        
         message = event['message']
+        
         msg_typed=event['msg_typed']
+        
         user_= event['username']
         
         dict_=event['dict_']    #-----{"room_name": "room1", "data": [["abc", 2100], ["f20170325", 1100]]}
@@ -241,11 +294,17 @@ class ChatConsumer(WebsocketConsumer):
 
 
         if message=="":    
+        
             self.send(text_data = json.dumps({'message': self.ques,
+        
                 'username':"FROM SERVER :",
+        
                 'room_id':event['room_id'],
+        
                 'room_group_name': event['room_group_name'],
+        
                 'user.status':'Online',
+        
                 'msg_typed':False,
                 
 
@@ -253,47 +312,76 @@ class ChatConsumer(WebsocketConsumer):
                 }))
         
         else:
+        
             msg_typed = True
+        
             self.send(text_data = json.dumps({'message': message,
+        
                 'username':user_,
+        
                 'room_id':event['room_id'],
+        
                 'room_group_name': event['room_group_name'],
+        
                 'user.status':'Online',
+        
                 'msg_typed':True,
-                
+        
+
                 'dict_':dict_      #-----{"room_name": "room1", "data": [["abc", 2100], ["f20170325", 1100]]}
                 }))
 
             self.player.ans_given = message
+        
             self.player.save()
 
             if self.player.ans_given == self.ans:
+        
                 self.room.ques_num += 1
+        
                 self.player.score += 100
+        
                 self.ques_No = Problem.objects.get(pk = self.room.ques_num)
+        
                 self.ques = self.ques_No.prob_ques
+        
                 self.ans= Problem.objects.get(pk= self.room.ques_num ).ques_answer 
+        
                 self.player.save()
+        
                 self.room.save()
 
 
+
                 self.send(text_data = json.dumps({'message': "Correct Answer By : " + user_,
+
                     'username':"FROM SERVER :",
+
                     'room_id':event['room_id'],
+
                     'room_group_name': event['room_group_name'],
+
                     'user.status':'Online',
+
                     'msg_typed':False,
+
                     
                     'dict_':dict_   #-----{"room_name": "room1", "data": [["abc", 2100], ["f20170325", 1100]]}
                 })) 
             
 
                 message = ""
+
                 self.send(text_data = json.dumps({'message': self.ques,
+
                 'username':"FROM SERVER :",
+
                 'room_id':event['room_id'],
+
                 'room_group_name': event['room_group_name'],
+
                 'user.status':'Online',
+
                 'msg_typed':False,
                 
                 'dict_':dict_       #-----{"room_name": "room1", "data": [["abc", 2100], ["f20170325", 1100]]}
