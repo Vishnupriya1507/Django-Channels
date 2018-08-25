@@ -116,16 +116,24 @@ def room(request, room_name):
         if Room.objects.filter(title=room_name):
             print("this is in rooms")
             data = Room.objects.all()
-            print(request.user.username)
+            print(type(request.user.username))
+            user = Player.objects.get(name=request.user)
+            print(user)
+
             name = Room.objects.get(title=room_name)
             print(name)
+            
+                
+            if user.room!=room_name:
+                #print(playa)
 
-            name.max_players += 1
-            if name.max_players>20:
-                name.room_status='Closed'
-                name.save()
-            else:
-                name.save()
+                name.max_players += 1
+                if name.max_players>20:
+                    name.room_status='Closed'
+                    name.save()
+                else:
+                    name.save()
+
                 
     
             
@@ -149,7 +157,7 @@ def room(request, room_name):
      
 
 @login_required
-def create_room(request):     # it is called only when all rooms have reached their max no of players i.e 20
+def create_room(request):     # called only when all rooms have reached their max no of players i.e 20
     room_name = Room()
 
     count = 0                 # counts number of rooms which are closed and then makes new room accordingily 
