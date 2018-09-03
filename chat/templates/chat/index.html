@@ -10,68 +10,82 @@
       <link href="https://fonts.googleapis.com/css?family=Oswald" rel="stylesheet">
       <link rel="stylesheet" type="text/css" href="{% static 'chat/style.css' %}">
    </head>
-   <body>
+
+  
+<body>
       <div id="container">
          <div>
             <button class="btn" onclick="logout()">Logout</button>
-            <button id="Rules" onclick="popup()">Rules</button>
+            <button id="Rules" onclick="openStoryline()">Rules</button>
          </div>
+         
          <div class="room">
-            <div class="rooms">
-			  <h3 style="font-size:5vh"> OPEN PLAYING ROOMS </h3>
-			
-			  {% for room in rooms %}
-			  <li class="room-link" id="{{ room.title }}" onclick='openroom(this)'>{{ room }}</li>
-			
-			  {% empty %}
-			  <em> NO PLAYING ROOM OPEN .....CREATE NEW ROOM ;)</em><br/>
-			  <a href="{% url 'create_room' %}">Create New Room</a>
-			  {% endfor %}
-		   </div>
+                <!-- This portion shows the neon effect around the box -->
+                <div class="light left"></div>
+                <div class="light top"></div>
+                <div class="light right"></div>
+                <div class="light bottom"></div>
+                <!-- End of neon effect -->
+
+                <div class="rooms">
+          			      <h3> OPEN PLAYING ROOMS </h3>
+          			
+              			  {% for room in rooms %}
+              			  <li class="room-link" id="{{ room.title }}" onclick='openroom(this)'>{{ room }}</li>
+              			
+              			  {% empty %}
+              			  <em> NO PLAYING ROOM OPEN .....CREATE NEW ROOM ;)</em><br/>
+              			  <a href="{% url 'create_room' %}">Create New Room</a>
+              			  {% endfor %}
+    		        </div>
          </div>
-         <!--<div id="input-field">
-            <h1>Create new room:</h1>
-            <input type="text"  id="room-name" placeholder="Name of the room"><br><br>
-            <input type="submit"  value="Go" id="submit-button">
-         </div>-->
-         <!-- Following section displays the rule --> 
-         <div id="rule-image">
-            <img src="{%static 'chat/icons/scroll.jpeg' %}" id="image">
-            <button class="close"  type="button"  >
-            <span class="cross">&times;</span>
-            </button>
-         </div>
+       
+
+       <!-- This part is to show the rules -->
+          <div class="newsline">
+              <div class="upperTriangle"></div>
+              <button class="close cross" type="button" onclick="closeStoryline()">&times;<button>  
+              <div class="lowerTriangle"></div>
+          </div>
       </div>
-   </body>
-   <script>
-	   function openroom(e) {
+
+
+      <script>
+     function openroom(e) {
         var roomName = e.id;
         window.location.pathname = '/chat/' + roomName + '/';
-    	};
-	   
-var x = document.getElementById('rule-image');
+      };
+     
 
-        function popup(){
-    	    x.style.display = "block";
-    	    x.style.animation = "incoming 1s";
-    	}
-
-    	$("button.close").click(function() {
- 
-        
-           $("#rule-image").fadeOut(1000);
-               
-        });
-
-        $("#container").click(function(event) {
-             
-             if (event.target == x) {
-             	$("#rule-image").fadeOut(1000);
-             }
-        });
         function logout(){
             window.location.pathname='logout';
         }
      
+
+     function openStoryline()
+        {
+            document.getElementsByClassName('newsline')[0].style.display = 'block';
+            document.getElementsByClassName('newsline')[0].classList.remove("revert");
+            document.getElementsByClassName('lowerTriangle')[0].classList.remove("originalPosition");
+            document.getElementsByClassName('lowerTriangle')[0].classList.add("changePos");
+        }
+
+        function closeStoryline()
+        {
+            document.getElementsByClassName('lowerTriangle')[0].classList.add("originalPosition");
+            document.getElementsByClassName('newsline')[0].classList.add("revert");
+            document.getElementsByClassName('lowerTriangle')[0].classList.remove("changePos");
+            setTimeout(function(){
+                document.getElementsByClassName('newsline')[0].style.display = 'none';
+            }, 1000);
+        }
    </script>
+   
+
+</body>
+   
+
+
 </html>
+
+ 

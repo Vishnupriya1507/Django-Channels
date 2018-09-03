@@ -58,101 +58,111 @@ def index(request):
 
 #@login_required
 def room(request, room_name):
-    prob = Problem.objects.order_by('ques_no')
-    users = list(get_current_users())
-
-    print(request.user)
-    player_joined = request.user  #--------- player logging in
-    
-    player = Player.objects.get(name=player_joined)
-    player.room = room_name
-    player.save()
-    
-    
-    dict_ = {}                #-------------{player_name : player_score}
+    rooms = Room.objects.filter(room_status="Open")
+    print(rooms)
+    for room in rooms:
+        print(room,room_name)
         
-    players = Player.objects.all()
-    
-    for player in players:
-        
-        if player.room ==room_name:
+        if str(room_name)==str(room):
             
-            print(player.name)
-    
-            dict_[player]= player.score
-            #self.dict_[player_ob]=str(self.dict_[player_ob]) 
-            #print(type(self.dict_[player_ob]))
-    
             
-    
-    print(dict_)                #-----{<Player: abc>: 1800, <Player: trs>: 10000, <Player: f20170325>: 1100}
+            prob = Problem.objects.order_by('ques_no')
+            users = list(get_current_users())
 
-    
-
-
-    for user in users:
-        user.status = 'Online' 
-    
-    
-           
-
-         
-
-    count=0                     #-------counting no of open rooms
-    for i in Room.objects.all():
-        #print(i)
-        if i.room_status=='Open':
-            print(type(i.room_status))
-            count+=1
-            break               #--------breaks even if one room has not touched max players
-    
-
-    print(count)           
-    print(list(Room.objects.all()))
-    
-
-    if count>0:
-        
-        if Room.objects.filter(title=room_name):
-            print("this is in rooms")
-            data = Room.objects.all()
-            print(type(request.user.username))
-            user = Player.objects.get(name=request.user)
-            print(user)
-
-            name = Room.objects.get(title=room_name)
-            print(name)
+            print(request.user)
+            player_joined = request.user  #--------- player logging in
             
+            player = Player.objects.get(name=player_joined)
+            player.room = room_name
+            player.save()
+            
+            
+            dict_ = {}                #-------------{player_name : player_score}
                 
-            if user.room!=room_name:
-                #print(playa)
+            players = Player.objects.all()
+            
+            for player in players:
+                
+                if player.room ==room_name:
+                    
+                    print(player.name)
+            
+                    dict_[player]= player.score
+                    #self.dict_[player_ob]=str(self.dict_[player_ob]) 
+                    #print(type(self.dict_[player_ob]))
+            
+                    
+            
+            print(dict_)                #-----{<Player: abc>: 1800, <Player: trs>: 10000, <Player: f20170325>: 1100}
 
-                name.max_players += 1
-                if name.max_players>20:
-                    name.room_status='Closed'
-                    name.save()
+            
+
+
+            for user in users:
+                user.status = 'Online' 
+            
+            
+                   
+
+                 
+
+            count=0                     #-------counting no of open rooms
+            for i in Room.objects.all():
+                #print(i)
+                if i.room_status=='Open':
+                    print(type(i.room_status))
+                    count+=1
+                    break               #--------breaks even if one room has not touched max players
+            
+
+            print(count)           
+            print(list(Room.objects.all()))
+            
+
+            if count>0:
+                
+                if Room.objects.filter(title=room_name):
+                    print("this is in rooms")
+                    data = Room.objects.all()
+                    print(type(request.user.username))
+                    user = Player.objects.get(name=request.user)
+                    print(user)
+
+                    name = Room.objects.get(title=room_name)
+                    print(name)
+                    
+                        
+                    if user.room!=room_name:
+                        #print(playa)
+
+                        name.max_players += 1
+                        if name.max_players>20:
+                            name.room_status='Closed'
+                            name.save()
+                        else:
+                            name.save()
+
+                        
+            
+                    
+                    return render(request, 'chat/room.html',
+                    {'room_name_json': mark_safe(json.dumps(room_name)),
+                    #'user':request.user.username,
+                    
+                    #'users':users,
+                    'room_status':name.room_status
+                    })
+                    
+                     
                 else:
-                    name.save()
-
-                
-    
-            
-            return render(request, 'chat/room.html',
-            {'room_name_json': mark_safe(json.dumps(room_name)),
-            #'user':request.user.username,
-            
-            #'users':users,
-            'room_status':name.room_status
-            })
-            
-             
-        else:
-            print("except")
-            return HttpResponseRedirect('/chat/')
-            
-    else:                     #------------- else part is count = 0 here means no rooms having room_status = "Open"
-        print("else")
-        create_room()
+                    print("except")
+                    return HttpResponseRedirect('/chat/')
+                    
+            else:                     #------------- else part is count = 0 here means no rooms having room_status = "Open"
+                print("else")
+                create_room()
+        
+    return render(request,"chat/index.html",{'rooms':rooms,})
         
      
 

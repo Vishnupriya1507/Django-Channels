@@ -1,158 +1,670 @@
+
+
 <!-- chat/templates/chat/room.html -->
-
 <!DOCTYPE html>
-
-
 {% load static %}
 <html>
+   <head>
+      <meta charset="utf-8"/>
+      <title>Chat Room</title>
+      <meta name="viewport" content="width=device-width, iinitial-scale=1,user-scalable=no ">
+      <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/reconnecting-websocket/1.0.0/reconnecting-websocket.min.js"></script>
+      <style>
+      @media all and (max-width: 767px)
+      {
+        .header h1{
+          font-size: 4vh;
+        }
+      }
+         * {
+         box-sizing: border-box;
+         margin: 0;
+         padding: 0;
+         font-weight: 300;
+         font-size: .95rem;
+         }
+         #chat-log{
+          overflow: auto !important;
+         }
+         #msgroom{
+         display: flex;
+         flex-direction: column;
+         height: 100%;
+         width: 40vw;
+         }
+         body {
+         overflow: hidden;
+         font-family: "Trebuchet MS";
+         }
+         ul, li {
+         list-style-position: inside;
+         }
+         h3 {
+         font-weight: 600;
+         text-align: center;
+         font-size: 1.5rem;
+         }
+         button {
+         border: none;
+         color: white;
+         cursor: pointer;
+         transition: background .3s ease;
+         }
+         .header {
+         position: fixed;
+         left: 0;
+         top:0;
+         width: 100vw;
+         height: 10vh;
+         background-color: #282828;
+         color: #240090;
+         font-size: 6vw;
+         text-align: center;
+         border:0.5vw solid #a5a5ab;
+         display: flex;
+         align-items: center;
+         justify-content: center;
 
-<head>
-    <meta charset="utf-8"/>
-    <title>Chat Room</title>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/reconnecting-websocket/1.0.0/reconnecting-websocket.min.js"></script>
-    
-</head>
+         }
+         .header h1 {
+         font-size:2vw;
+         color:#a4c2a8;
+         }
+         .chat_room {
+         margin-top: 10vh;
+         height: 90vh;
+         width:100vw;
+         left:0;
+         display: flex;
+         flex-direction: row;
+         }
+         .OnlineUsersList {
+         background-color: black;
+         color: white;
+         }
+         .chat__sidebar {
+         overflow-y: scroll;
+         width: 20vw;
+         height: 100%;
+         background-color: black;    
+         }
+         .chat__sidebar h3 {
+         color: #3500D3;
+         margin: 10px 20px;
+         text-align: left;
+         }
+         .chat__sidebar ul {
+         list-style-type: none;
+         }
+         .chat__sidebar li {
+         background: #3500D3;
+         border: 1px solid #240090;
+         border-radius: 1vw;
+         padding: 10px;
+         margin: 10px;
+         transition: 0.2s ease-in-out;    
+         }
+         .chat__sidebar li:hover {
+         background: #240090;
+         }
+         .chat__sidebar::-webkit-scrollbar {
+         background-color: #190061;
+         }
+         .chat__sidebar::-webkit-scrollbar-thumb {
+         background-color: #3500D3;
+         }
+         .chat__sidebar::-webkit-scrollbar-button {
+         background-color: #240090;
+         }
+         .chat__main {
+         display: flex;
+         flex-direction: column;
+         height: 90%;
+         width: 50vw;
+         /*  background-image: url('https://xshyfc.com/wp-content/uploads/data/2018/3/19/Coding-Wallpaper-HDmost-popular-coding-wallpaper-hd-1080x1920-pc-PIC-WPXH614596.jpg');*/
+         background-color: black;
+         }
+         .chat__messages::-webkit-scrollbar {
+         background-color: #190061;
+         }
+         .chat__messages::-webkit-scrollbar-thumb {
+         background-color: #3500D3;
+         }
+         .chat__messages::-webkit-scrollbar-button {
+         background-color: #240090;
+         }
+         .chat__messages {
+         flex-grow: 1;
+         overflow-y: scroll;
+         -webkit-overflow-scrolling: touch;
+         }
+         .chat__footer {
+         background: #190061;
+         display: flex;
+         flex-direction: row;
+         padding: 10px;
+         height: 10vh;
+         flex-shrink: 0; 
+         width: 50vw;        
+         position: fixed;
+         bottom: 0;
+       }
+         .chat__footer form {
+         flex-grow: 1;
+         display: flex;
+         }
+         .chat__footer form * {
+         margin-right: 10px;
+         }
+         .chat__footer input {
+         border: none;
+         padding: 10px;
+         flex-grow: 1;   
+         width: 100%;  
+         max-width:80%;            
+         }
+         .chat__messages {
+         list-style-type: none;
+         padding: 10px;
+         }
+         .message {
+         padding: 10px;
+         background-color: #3500D3;    
+         color: white;
+         font-weight: 400;    
+         margin: 10px 0;
+         font-family: "advent";
+         border-radius: 1vw;   
+         border:1px solid #282828;
+         transition: 0.1s ease-in-out;    
+         }
+         .message:hover {
+         background-color: #240090;
+         }
+         .inputArea {
+         background-color: black;
+         color: white;
+         font-weight: 400;
+         }
+         .inputArea:focus {
+         border: 2px solid #3500D3;
+         }
+         .sendButton {
+         width: 25%;
+         background-color: #3500D3;
+         color: white;
+         font-weight: 400;
+         border-radius: 3px;
+         transition: 0.1s ease-in-out;
+         box-sizing: border-box;
+         font-size: 1.5vw;
+         }
+         .sendButton:hover {
+         background-color: #240090;
+         }
+         .message__title {
+         display: flex;
+         margin-bottom: 5px;
+         }
+         .message__title h4 {
+         font-weight: 600;
+         margin-right: 10px;
+         }
+         .message__title span {
+         color: #999;
+         }
+         .room_info {
+         width: 50vw;
+         background-color: #282828
+         }
+         .leaderboard {
+         max-height: 80vh;
+         margin-top:0;
+         display: flex;
+         flex-direction: row;
+         overflow: auto;
+         }
+         .leaderboard::-webkit-scrollbar {
+         background-color: #190061;
+         }
+         .leaderboard::-webkit-scrollbar-thumb {
+         background-color: #3500D3;
+         }
+         .leaderboard::-webkit-scrollbar-button {
+         background-color: #240090;
+         }
+         .leaderboard .userNames {
+         width: 33vw;
+         color: white;
+         display: flex;
+         flex-direction: column;
+         align-content: space-between;
+         }
+         .leaderboard .topScores {
+         width: 7vw;
+         color: black;
+         }
+         .users__list {
+         list-style-type: upper-roman;
+         }
+         .scores__list {
+         list-style-type: none;
+         }
+         .userListElement {
+         background-color: #5e8153;
+         border-radius: 0.5vw;
+         margin: 1vh 1vw;
+         padding: 10px;
+         font-size: 1.5vw;
+         transition: 0.2s ease-in-out;
+         }
+         .userListElement:hover {
+         background-color: #3500D3;
+         }
+         .scoresElement {
+         background-color: #5e8153;
+         color: white;
+         border-radius: 0.5vw;
+         padding: 10px;
+         margin: 1vh 1vw;
+         font-size: 1.5vw;
+         transition: 0.2s ease-in-out;
+         display: flex;
+         justify-content: center;
+         align-items: center;
+         }
+         .scoresElement:hover {
+         background-color: #190061;
+         color: white;
+         }
+         .user__info {
+         padding: 10px;
+         height: 10vh;
+         width: 50vw;
+         color: white;
+         background-color: black;
+         bottom: 0;
+         position: fixed;
+         }
+         .userInfoList {
+         list-style-type: none;
+         width: 48.5vw;
+         height: 8vh;
+         }
+         .displayInfo {
+         background-color: #282828;
+         border-radius: 1vw;
+         height: 7vh;
+         padding: 10px;
+         transition: 0.2s ease-in-out;
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         }
+         .displayInfo:hover {
+         background-color: #3500D3;
+         }
+         .infoText {
+         font-size: 1.4vw;
+         text-align: center;
+         }
+         @font-face {
+            font-family: 'advent';
+            src: url(advent.ttf) format('opentype');
+        }
+         .logoutButton {
+         background-color: #5e8153;
+         color: white;
+         right: .5vw;
+         position: absolute;
+         width: 8vw;
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         text-decoration: none;
+         margin: 0 auto;
+         height: 7vh;
+         border-radius: 1vw;
+         font-size: 1.4vw;
+         transition: 0.2s ease-in-out;
+         font-weight: 100;
+         }
+         .logoutButton:hover {
+         background-color: #240090;
+         }
+         .message{
+          background-color: #5e8153;
+         }
+         .header h1{
+          color: #87ff65;
+         }
+         @media (max-width: 600px) {
+         * {
+         font-size: 1rem;
+         }
+         .userListElement{
+          font-size: 2.5vh
+         }
+         .infoText{
+          font-size: 2.3vh;
+         }
+         .message__title h4{
+          font-size: 2.6vh;
+         }
+         .message__title{
+          margin-bottom: 5px;
+         }
+         .message{
+          margin: 5px 0;
+          padding: 5px;
+         }
+         .message__body p{
+          font-size: 3vh;
+         }
+         #chat-message-submit{
+          transform: translateX(-2vh);
+          line-height: 0;
+          text-align: center;
+          font-size: 2vh
+         }
+         .header h1{
+          font-size: 4vh;
+         }
+         .scoresElement{
+          font-size: 2.5vh;
+          width: 10vh
+         }
+         .logoutButton{
+          font-size: 2vh;
+          width: 10vh;
+         }
+         .inputArea{
+          transform: translateX(-1vh);
+         }
+         .chat__footer form {
+         margin-bottom: 10px;
+         }
+         .chat__footer button {
+         margin-right: 0px;
+         }
+         }
+      </style>
+   </head>
+   
 
-    
-    
-        
-    
-    <div class="col s12 black darken-2 main-content" id="question-div">
-          <!-- Question Div Goes Here -->
-           <div id='title' class="center">
-               <h3>PLAYING ARENA</h3>
-               <a href="{% url 'logout' %}">LOGOUT</a>
-          
-                Hello, <span id="user-username">{{ request.user.username }}</span>.
- 
-            <!--{% if user.is_authenticated %}    {% endif %}-->
+
+   <body>
+    <span style="display:none;" id="user-username">{{ request.user.username }}</span>
       
 
-          
-    </div>
-
-     
-<body>
-    <textarea id="chat-log" cols="100" rows="16"></textarea><br/>
-    <input id="chat-message-input" type="text" size="70"/><br/>
-       
-    <input id="chat-message-submit" type="button" value="Send "/>   <!--<input id="chat-message-user"  type="text" size="100"/><br/> -->
-     
-    <input id="chat-message-fetch" type="button" value="Send Question "/>                                                                 
-
-</body>                                                                     
-<script>
-    var roomName = {{ room_name_json }};    //in views we used room_name_json  in room view as 
-    //console.log(roomName);                  // 'room_name_json':mark_safe(json.dumps(room_name)
-    
-    
-    
-    //creating a Web Socket connection
-    var chatSocket = new WebSocket('ws://' + window.location.host + '/ws/chat/' + roomName + '/');
-     
-    
-    
-    chatSocket.onopen = function (message) {
-        
-        
-        console.log("Connected to chat socket");// Display user friendly messages for the successful establishment of     
-        //console.log("Got websocket message " + message.data); //connection
-        //var data = JSON.parse(message.data);
-        //var ok_msg = "";
-        //ok_msg = "<div class='contextual-message text-muted'>" + data.username + " joined the room!" +       " </div>"
-    };
-    chatSocket.onmessage = function(event) {
-        var data = JSON.parse(event.data);
-        var message = data['message'];
-        var msg_typed = data['msg_typed'];
-        var msg_typed = true;
-        var other_user = "rashi";
-        var username = data['username'];
-        var room_id = data['room_id'];
-        //var ques = data['ques'];
-        
-        
-        console.log("Got websocket message " + event.data);
-        //var msgdiv = $("#room-" + data.room_id + " .messages");
-        if (message==""){
-             var ok_msg = "";
-             ok_msg = "<div class='message'>" +"<span>" + data.room_id+"</span">+
-                                        "<span class='username'>" + data.username + "</span>" +
-                                         "<span class='body'>" + data.message + "</span>" +
-                                         "</div>";
-            
-            
-            //msgdiv.append(ok_msg);
-            //msgdiv.scrollTop(msgdiv.prop("scrollHeight"));
-            console.log(data.username + ":" + data.message);
-            //console.log(ok_msg + 'this is ok_msg');
-            //chatSocket.send("from server :" +message);
-            //document.querySelector('#chat-log').value += (message + '\n');
-            document.querySelector('#chat-log').value += (data.username +':'+ message + '\n');
-            //document.querySelector('#chat-log').value += (user + '\n');
-            }
-           else {
-           var ok_msg = "";
-             ok_msg = "<div class='message'>" +"<span>" + data.room_id+"</span">+
-                                       "<span class='username'>" + data.username + "</span>" +
-                                         "<span class='body'>" + data.message + "</span>" +
-                                         "</div>";
-            //msgdiv.append(ok_msg);
-            //msgdiv.scrollTop(msgdiv.prop("scrollHeight"));
-            
-            
-            console.log(data.username + ":" + data.message);
-            //console.log(ok_msg + 'this is ok_msg');
-            //chatSocket.send("from server :" +message);
-            //document.querySelector('#chat-log').value += (message + '\n');
-            document.querySelector('#chat-log').value += (data.username +':'+ message + '\n');
-            //document.querySelector('#chat-log').value += (user + '\n');
+      <div class="header">
+         <h1>Anagram by CODING CLUB!</h1>
+         <a class="logoutButton" href="{% url 'logout' %}">LOGOUT</a>
+      </div>
+      
+      <div class="chat_room">
          
-             }
+         <div class="chat__main">
+            <ol id="chat-log" class="chat__messages">
+            </ol>
+            <div class="chat__footer">
+               <form id="message-form" onsubmit="return false">
+                  <input class="inputArea" id="chat-message-input" name="message" type="text" placeholder="Message" autocomplete="off"/>    
+                  <input type="button" class="sendButton" id="chat-message-submit" value="Send">
+               </form>
+            </div>
+         </div>
+         <div class="room_info">
+            <div class="leaderboard">
+               <div class="userNames">
+                  <ol class="users__list">
+                  </ol>
+               </div>
+               <div class="topScores">
+                  <ol class="scores__list">
+                  </ol>
+               </div>
+            </div>
+            <div class="user__info">
+               <ul class="userInfoList">
+                  <li class="displayInfo">
+                  </li>
+               </ul>
+            </div>
+         </div>
+      </div>
+   </body>
+   
+
+   <script>
+      var roomName = {{ room_name_json }};    //in views we used room_name_json  in room view as 
+      //console.log(roomName);                  // 'room_name_json':mark_safe(json.dumps(room_name)
+      
+            
+      
+      //creating a Web Socket connection
+      var chatSocket = new WebSocket('ws://' + window.location.host + '/ws/chat/' + roomName + '/');
+       
+      
+      
+      chatSocket.onopen = function (message) {
           
-
-    };
-        
-        //if (data['is_logged_in']) {document.querySelector('#chat-log').value += (data.username + ': Online');}
-        //else {document.querySelector('#chat-log').value += (data.username + ': Offline');}
-        
-    
-    chatSocket.onclose = function() {
-        console.error('Chat socket closed unexpectedly');
-        setTimeout(function() {
-      connect();
-    }, 1000);
-    };
-    document.querySelector('#chat-message-input').focus();
-          document.querySelector('#chat-message-input').onkeyup = function(e) {
-              if (e.keyCode === 13) {  // enter, return
-                  document.querySelector('#chat-message-submit').click();
+          
+          console.log("Connected to chat socket");// Display user friendly messages for the successful establishment of     
+          //console.log("Got websocket message " + message.data); //connection
+          //var data = JSON.parse(message.data);
+          //var ok_msg = "";
+          //ok_msg = "<div class='contextual-message text-muted'>" + data.username + " joined the room!" +       " </div>"
+      };
+      var scoredisp;
+      var myscore;
+      chatSocket.onmessage = function(event) {
+          var data = JSON.parse(event.data);
+          var message = data['message'];
+          var msg_typed = data['msg_typed'];
+          var msg_typed = true;
+          var other_user = "rashi";
+          var username = data['username'];
+          var room_id = data['room_id'];
+          //var ques = data['ques'];
+          var dict_ = data['dict_'];
+          
+          
+          console.log("Got websocket message " + event.data);
+          //var msgdiv = $("#room-" + data.room_id + " .messages");
+          if (message==""){
+               var ok_msg = "";
+               ok_msg = "<div class='message'>" +"<span>" + data.room_id+"</span">+
+                                          "<span class='username'>" + data.username + "</span>" +
+                                           "<span class='body'>" + data.message + "</span>" +
+                                           "</div>";
+              
+              
+              //msgdiv.append(ok_msg);
+              //msgdiv.scrollTop(msgdiv.prop("scrollHeight"));
+              console.log(data.username + ":" + data.message);
+              //console.log(ok_msg + 'this is ok_msg');
+              //chatSocket.send("from server :" +message);
+              //document.querySelector('#chat-log').value += (message + '\n');
+              document.querySelector('#chat-log').value += (data.username +':'+ message + '\n');
+              //document.querySelector('#chat-log').value += (user + '\n');
               }
-          };
-                                                                                
-        //  document.querySelector('#chat-message-user').focus();
-        //  document.querySelector('#chat-message-user').onkeyup = function(e) {
-        //      if (e.keyCode === 13) {  // enter, return
-        //          document.querySelector('#chat-message-submit').click();
-        //      }
-        //  };
-          document.querySelector('#chat-message-submit').onclick = function(event) {
-               var messageInputDom = document.querySelector('#chat-message-input');
-               var message = messageInputDom.value;
-              var user_ = document.getElementById('user-username').innerHTML;
-               
-                       DATA = chatSocket.send(JSON.stringify({
-                   'message': message,
-                  'other_user'   : "rashi",
-                  "user_"     :user_,
-                   'msg_typed':true
-               }));
-               console.log("daaatttaaaaaa");
-               console.log(DATA);
-              //messageUser.value = ''; //
-              messageInputDom.value = '';
-        };
+             else {
+             var ok_msg = "";
+               ok_msg = "<div class='message'>" +"<span>" + data.room_id+"</span">+
+                                         "<span class='username'>" + data.username + "</span>" +
+                                           "<span class='body'>" + data.message + "</span>" +
+                                           "</div>";
+              //msgdiv.append(ok_msg);
+              //msgdiv.scrollTop(msgdiv.prop("scrollHeight"));
+              
+              
+              console.log(data.username + ":" + data.message);
+              //console.log(ok_msg + 'this is ok_msg');
+              //chatSocket.send("from server :" +message);
+              //document.querySelector('#chat-log').value += (message + '\n');
+              document.querySelector('#chat-log').value += (data.username +':'+ message + '\n');
+              //document.querySelector('#chat-log').value += (user + '\n');
+           
+               }
+            //CODE STARTS OF NIKHIL
+      var Users = [],scores = [];
+      for(let i=0;i<dict_['data'].length;i++)
+      {
+        Users[i] = dict_['data'][i][0];
+        scores[i] = dict_['data'][i][1];
+      }
+      
+          var Senders = [];
+          var messages = [];
+          var createdAt = [];
+          var temp;
+          messages.push(message);
+          Senders.push(username);
+       for(let i=0;i<Users.length-1;i++)
+        {
+          for(let j=i+1;j<Users.length;j++)
+            {
+              if(scores[j]>scores[i])
+                {
+                  temp = scores[j];
+                  scores[j] = scores[i];
+                  scores[i]=temp;
+                  temp = Users[j];
+                  Users[j] = Users[i];
+                  Users[i] = temp;
+                }
+            }
+        }
+        console.log(scores,Users);
+          var topUserNames = [];
+          var topUserScores = [];
+          for(let i=0;i<Users.length;i++)
+      {
+        topUserNames[i] = Users[i];
+        topUserScores[i] = scores[i];
+      }
+        for(let i=0;i<Users.length;i++)
+        {
+          if(Users[i]==data['username'])
+          {
+            scoredisp = scores[i];
+          }
+        }
 
-</script>
+          var UserInfo = {
+              Name: data['username'],
+              Score: scoredisp
+          };
+          
+          
+          //TO DISPLAY MESSAGES
+          for(var j=0; j<messages.length; j++) {
+              var messageList = document.createElement('li');
+              messageList.className = 'message';
+              var titleDiv = document.createElement('div');
+              titleDiv.className = 'message__title';
+              var Sender = document.createElement('h4');
+              var messageBody = document.createElement('div');
+              messageBody.className = 'message__body';
+              var text = document.createElement('p');
+              
+              var senderText = document.createTextNode(Senders[j]);
+              var messageText = document.createTextNode(messages[j]);
+              Sender.appendChild(senderText);
+              text.appendChild(messageText);
+              
+              titleDiv.appendChild(Sender);
+              messageList.appendChild(titleDiv);
+              
+              messageBody.appendChild(text);
+              messageList.appendChild(messageBody);
+              var messageMainList = document.getElementById('chat-log'); 
+              messageMainList.appendChild(messageList);
+              var element = document.getElementById("chat-log");
+          }
+          //TO DISPLAY LEADERBOARD AND PLAYER INFO
+          var userNames = document.getElementsByClassName('userNames')[0];
+          var scores = document.getElementsByClassName('topScores')[0];
+          var usersList = document.getElementsByClassName('users__list')[0];
+          var scoresList = document.getElementsByClassName('scores__list')[0];
+          usersList.innerHTML="";
+          scoresList.innerHTML="";
+          for(var k=0; k<topUserNames.length; k++) {
+              var list = document.createElement('li');
+              var userNamesText = document.createTextNode(topUserNames[k]);
+              list.className = 'userListElement';
+              list.appendChild(userNamesText);
+              usersList.appendChild(list);
+              
+              var scores = document.createElement('li');
+              var scoresText = document.createTextNode(topUserScores[k]);
+              scores.className = 'scoresElement';
+              scores.appendChild(scoresText);
+              scoresList.appendChild(scores);
+          }
+          document.getElementById("chat-log").scrollBy(0,1500);
+          var Info = document.getElementsByClassName('user__info')[0];
+          var userInfolist = document.getElementsByClassName('userInfoList')[0];
+          var displayInfo = document.getElementsByClassName('displayInfo')[0];
+      //        var NameNode = document.createTextNode(UserInfo.Name);
+      //        var ScoreNode = document.createTextNode(UserInfo.Score);
+          
+          var myname = document.getElementById('user-username').innerHTML;
+          for(let i=0;i<topUserNames.length;i++)
+          {
+            if(topUserNames[i]==myname)
+            {
+              myscore = topUserScores[i];
+            }
+          }
+          var infoMessage = document.createElement('p');
+          infoMessage.className = 'infoText';
+          var infoText = document.createTextNode(`Hey ${myname}, your score is ${myscore}`);
+          infoMessage.appendChild(infoText);
+          displayInfo.innerHTML="";
+          displayInfo.appendChild(infoMessage);
+          userInfolist.appendChild(displayInfo);
+          Info.appendChild(userInfolist);
+      
+      };
+          
+          //if (data['is_logged_in']) {document.querySelector('#chat-log').value += (data.username + ': Online');}
+          //else {document.querySelector('#chat-log').value += (data.username + ': Offline');}
+          
+      
+      chatSocket.onclose = function() {
+          console.error('Chat socket closed unexpectedly');
+          setTimeout(function() {
+        connect();
+      }, 1000);
+      };
+      document.querySelector('#chat-message-input').focus();
+            document.querySelector('#chat-message-input').onkeyup = function(e) {
+                if (e.keyCode == 13) {  // enter, return
+                  e.preventDefault();
+                    document.querySelector('#chat-message-submit').click();
+                }
+            };
+            document.querySelector('#chat-message-submit').onclick = function(event) {
+                 var messageInputDom = document.querySelector('#chat-message-input');
+                 var message = messageInputDom.value;
+                var user_ = document.getElementById('user-username').innerHTML;
+                 
+                    DATA = chatSocket.send(JSON.stringify({
+                    'message': message,
+                    'other_user'   : "rashi",
+                    "user_"     :user_,
+                    'msg_typed':true
+                 }));
+                 console.log("daaatttaaaaaa");
+                 console.log(DATA);
+                //messageUser.value = ''; //
+                messageInputDom.value = '';
+                setTimeout(function(){document.getElementById("chat-log").scrollBy(0,1500);},200);
+                
+          };
+   </script>
 </html>
+

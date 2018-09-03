@@ -1,201 +1,209 @@
-body {
-	background-image: url('icons/room.jpg');
-	background-size: cover;
-	background-repeat: no-repeat;
-	background-attachment: fixed
+<style type="text/css">
+     
+     body {
+  background-image: url('./chat/static/chat/icons/room.jpg');
+/*  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;*/
 }
 .room {
-	float: left;
-	width: 30vw;
-	overflow-y: scroll;
-	overflow-x: hidden;
-	height: 50vh;
-	background-color: #330000;
-	padding: 5vh;
-	border-radius: 10%;
-	text-align: center;
-	top: 20vh;
-	left:35vw;
-	display: flex;
-	align-content: center;
-	justify-content: center;
-	position: absolute;
-	opacity: .8;
-	animation-name: animate;
-	animation-duration: .4s;
-	animation-iteration-count: infinite;
+  float: left;
+  width: 30vw;
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: 50vh;
+  background-color: #330000;
+  padding: 5vh;
+  border-radius: 10%;
+  text-align: center;
+  top: 20vh;
+  left:35vw;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  position: absolute;
+  opacity: .9;
+  /*animation-name: animate;
+  animation-duration: .4s;
+  animation-iteration-count: infinite;*/
 }
+
+/*Neon effect starts here*/
+.light
+{
+  position: absolute;
+  background: #1A1E24;
+  box-shadow: 0px 0px 6px 0px #1A1E24;
+  border-radius: 3px;
+}
+.left
+{
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 2.5vh;
+  -webkit-animation: flickr 3s ease-in-out 1.44s infinite alternate both;
+  animation: flickr 3s ease-in-out 1.5s infinite alternate both;
+}
+.top
+{
+  top: 0;
+  right: 0;
+  height: 2.5vh;
+  width: 100vw;
+  -webkit-animation: flickr 3s ease-in-out 2.09s infinite alternate both;
+  animation: flickr 3s ease-in-out 2.1s infinite alternate both;
+}
+.right
+{
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 2.5vw;
+  -webkit-animation: flickr 3s ease-in-out 1.44s infinite alternate both;
+  animation: flickr 3s ease-in-out 1s infinite alternate both;
+}
+.bottom
+{
+  bottom:0;
+  right: 0;
+  height: 2.5vh;
+  width: 100vw;
+  -webkit-animation: flickr 3s ease-in-out 2.09s infinite alternate both;
+  animation: flickr 3s ease-in-out 1.6s infinite alternate both;
+}
+
+@-webkit-keyframes flickr {
+  35%, 37%, 39%, 41%, 100% {
+    background: #F1F4F5;
+    box-shadow: 0px 0px 10px 0px #F1F4F5;
+  }
+  0%, 34%, 36%, 36%, 38%, 40% {
+    background: #1A1E24;
+    box-shadow: 0px 0px 6px 0px #1A1E24;
+  }
+}
+
+@keyframes flickr {
+  35%, 37%, 39%, 41%, 100% {
+    background: #F1F4F5;
+    box-shadow: 0px 0px 10px 0px #F1F4F5;
+  }
+  0%, 34%, 36%, 36%, 38%, 40% {
+    background: #1A1E24;
+    box-shadow: 0px 0px 6px 0px #1A1E24;
+  }
+}/*End of neon effect*/
+
 .room-link{
-	list-style-type: none;
-	font-size: 2vw;
-	margin-bottom: 1vw;
-	font-family: 'acme';
-	cursor: url('icons/roomptr.svg'),default;
-	
+  list-style-type: none;
+  font-size: 4vw;
+  margin-bottom: 1vw;
+  font-family: 'acme';
+  color: #8baaad;
+  text-shadow: 2px 3px 25px #a36156;
+  cursor: url('icons/roomptr.svg'),default;
+  display: block;
 }
+.room-link:hover {
+  color: #64B5F6;
+}
+.rooms h3
+{
+  font-size:5vh; 
+  color:#3a7d44;
+}
+
 .roomNames{
-	cursor: pointer;
+  cursor: pointer;
 }
 #container{
-	position: absolute;
-	top: 0;
-	left: 0;
-	height: 100vh;
-	width: 100vw;
-}
-.room a {
-	font-size: 6vh;
-	font-family: 'Oswald', sans-serif;
-	color: #64B5F6;
-	text-shadow: 2px 3px 25px #C62828;
-	text-decoration: none;
-	display: block;
-	opacity: 1;
-	margin-top: 2vw;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  background-image: url('room.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
-.room a:hover {
-	background-color: #D56446;
-	color: #64B5F6;
-}
+
 
 .btn {
-	float: right;
-	height: 5vh;
-	width: 6vw;
-	margin-top: 3vh;
-	margin-right: 1vw;
-	background-color: transparent;
-	border: none;
-	outline: none;
-	font-size: 3vh;
-	font-family: 'Oswald', sans-serif;
-	box-shadow: 0 2px #999;
-	border-radius: 10%;
-	color: #f4df42;
+  float: right;
+  height: 5vh;
+  width: 6vw;
+  margin-top: 3vh;
+  margin-right: 1vw;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  font-size: 3vh;
+  font-family: 'Oswald', sans-serif;
+  box-shadow: 0 2px #999;
+  border-radius: 10%;
+  color: #f4df42;
 }
 
 .btn:hover {
-	background-color: #546E7A;
-	color: #D4E157;
-	cursor: pointer;
+  background-color: #546E7A;
+  color: #D4E157;
+  cursor: pointer;
 }
 
 #Rules {
-	float: left;
-	height: 5vh;
-	width: 6vw;
-	margin-top: 3vh;
-	margin-left: 1vw;
-	background-color: transparent;
-	border: none;
-	outline: none;
-	box-shadow: 0 2px #999;
-	border-radius: 10%;
-	color: #f4df42;
-	font-size: 3vh;
-	font-family: 'Oswald', sans-serif;
+  float: left;
+  height: 5vh;
+  width: 6vw;
+  margin-top: 3vh;
+  margin-left: 1vw;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  box-shadow: 0 2px #999;
+  border-radius: 10%;
+  color: #f4df42;
+  font-size: 3vh;
+  font-family: 'Oswald', sans-serif;
 }
 
 #Rules:hover {
-	background-color: #546E7A;
-	color: #D4E157;
-	cursor: pointer;
+  background-color: #546E7A;
+  color: #D4E157;
+  cursor: pointer;
 }
 
-#input-field {
-	position: absolute;
-	margin-top: 20vh;
-	margin-left: 40vw;
-	background-color: #0b0033;
-	opacity: .8;
-	padding: 2vw;
-	border-radius: 10%;
-}
 
-#input-field h1 {
-	color: #fefdca;
-	margin-left: 7vw;
-	font-family: 'Oswald', sans-serif;
-}
-
-#room-name {
-	width: 30vw;
-	height: 4vh;
-	border-radius: 10%;
-	font-size: 3.2vh;
-	border: none;
-	outline: none;
-	border-bottom: 2px solid #6D4C41;
-	color: #FFB300;
-	background-color: transparent;
-}
-
-#submit-button {
-	height: 4vh;
-	width: 6vw;
-	border-radius: 10%;
-	border: none;
-	outline: none;
-	background-color: transparent;
-	font-family: 'Oswald', sans-serif;
-	font-size: 3vh;
-	box-shadow: 0 2px #999;
-	margin-left: 24vw;
-	color: #f4df42;
-}
-
-#submit-button:hover {
-	background-color: #546E7A;
-	color: #D4E157;
-	cursor: pointer;
-}
-
-#rule-image {
-	z-index: 1;
-	display: none;
-	padding-top: 100px;
-	position: fixed;
-	left: 0;
-	top: 0;
-	width: 100%;
-	height: 100%;
-	overflow: auto;
-	background-color: rgba(0, 0, 0, 0.7);
-}
-
-#image {
-	height: 80vh;
-	margin-left: 33vw;
-}
 
 .close {
-	position: absolute;
-	right: 0;
-	top: 0;
-	border: none;
-	background-color: inherit;
-	border-radius: 1.1vh;
+  position: absolute;
+  right: 0;
+  top: 0;
+  border: none;
+  background-color: inherit;
+  border-radius: 1.1vh;
 }
 
 .close:hover {
-	padding: 0.8vh;
-	background-color: #4e4e50;
-	cursor: pointer;
+  padding: 0.8vh;
+  background-color: #4e4e50;
+  cursor: pointer;
 }
 
 .cross {
-	color: #b1a296;
-	font-size: 5vh;
+  color: #b1a296;
+  font-size: 5vh;
 }
 
 .cross:hover {
-	color: #6f2232;
+  color: #6f2232;
 }
 
-@keyframes animate {
-	
-	0%{
+/*@keyframes animate {
+  
+  0%{
         background: repeating-linear-gradient(-55deg, #D56446, #D56446 12px, #EA7962 12px, #EA7962 24px);
     }
     50%{
@@ -204,115 +212,224 @@ body {
      100%{
         background: repeating-linear-gradient(-55deg, #D56446, #D56446 12px, #EA7962 12px, #EA7962 24px);
     }
-}
+}*/
 
-@keyframes incoming {
-	from {
-		transform: scale(0);
-		opacity: 0;
-	}
-	to {
-		transform: scale(1);
-		opacity: 1;
-	}
-}
 
 @media only screen and (max-width: 850px) {
-	.room {
-		width: 65vw;
-		left: 17.5vw;
-		text-align: center;
-		padding: 4vh 3vw;
-		background-color: #6D4C41;
-	}
-	.room a {
-		font-size: 4vh;
-		margin-top: ;
-		padding: 0;
-		text-decoration: none;
-		opacity: 1;
-		display: block;
-	}
-	.room a:hover {
-		background-color: #eaffd0;
-		color: #364f6b;
-	}
-	#input-field {
-		margin-top: 54vh;
-		margin-left: 6.5vw;
-		background-color: transparent;
-		width: 80%;
-		border-radius: 10%;
-		padding: 3vw;
-	}
-	#input-field h1 {
-		margin-left: 4vw;
-		font-size: 8vw;
-		font-family: 'Oswald', sans-serif;
-	}
-	#room-name {
-		width: 60vw;
-		height: 4vh;
-		border-radius: 10%;
-		font-size: 2.9vh;
-		margin-left: 4vw;
-		border: none;
-		outline: none;
-		background-color: inherit;
-		border-bottom: 2px solid #0D47A1;
-		color: #FFB300;
-	}
-	#submit-button {
-		height: 4vh;
-		width: 20vw;
-		border-radius: 10%;
-		margin-left: 47vw;
-		border: none;
-		outline: none;
-		background-color: transparent;
-		box-shadow: 0 2px #999;
-		color: #f4df42;
-		font-size: 3vh;
-	}
-	.btn {
-		float: right;
-		height: 5vh;
-		width: 22vw;
-		margin-top: 2vh;
-		margin-right: 6vw;
-		background-color: transparent;
-		border-radius: 10%;
-		outline: none;
-		border: none;
-		box-shadow: 0 2px #999;
-		color: #f4df42;
-		font-size: 3vh;
-	}
-	#Rules {
-		float: left;
-		height: 5vh;
-		width: 19vw;
-		margin-top: 2vh;
-		margin-left: 6vw;
-		background-color: transparent;
-		font-size: 3vh;
-		border: none;
-		outline: none;
-		box-shadow: 0 2px #999;
-		color: #f4df42;
-		border-radius: 10%;
-	}
-	#Rules:hover {
-		background-color: #546E7A;
-		color: #D4E157;
-	}
-	#image {
-		height: 70vh;
-		margin-left: 0;
-		width: 100vw;
-	}
+  .room {
+    width: 65vw;
+    left: 17.5vw;
+    text-align: center;
+    padding: 4vh 3vw;
+    background-color: #012622;
+  }
+  .rooms h3{
+    font-size: 4vh
+  }
+  .room-link{
+    font-size: 4vh;
+  }
+  /*.room a {
+    font-size: 4vh;
+    margin-top: ;
+    padding: 0;
+    text-decoration: none;
+    opacity: 1;
+    display: block;
+  }
+  .room a:hover {
+    background-color: #eaffd0;
+    color: #364f6b;
+  }*/
+ 
+  .btn {
+    float: right;
+    height: 5vh;
+    width: 22vw;
+    margin-top: 2vh;
+    margin-right: 6vw;
+    background-color: transparent;
+    border-radius: 10%;
+    outline: none;
+    border: none;
+    box-shadow: 0 2px #999;
+    color: #f4df42;
+    font-size: 3vh;
+  }
+  #Rules {
+    float: left;
+    height: 5vh;
+    width: 19vw;
+    margin-top: 2vh;
+    margin-left: 6vw;
+    background-color: transparent;
+    font-size: 3vh;
+    border: none;
+    outline: none;
+    box-shadow: 0 2px #999;
+    color: #f4df42;
+    border-radius: 10%;
+  }
+  #Rules:hover {
+    background-color: #546E7A;
+    color: #D4E157;
+  }
+  
 }
 @font-face {
     font-family: 'acme';
     src: url(Fonts/Acme.ttf) format('opentype');
 }
+
+
+
+/*-------------------------------------*/
+
+.newsline
+{
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: black;
+    z-index: 200;
+    animation: grow .6s linear;
+    animation-fill-mode: forwards;
+}
+
+.revert
+{
+    animation: revert .6s linear;
+}
+
+@keyframes revert
+{
+    100%
+    {
+        width: 10vw;
+        height: 10vh;
+    }
+    50%
+    {
+        width: 10vw;
+        height: 100vh;
+    }
+    0%
+    {
+        width: 100vw;
+        height: 100vh;
+    }
+}
+
+@keyframes grow
+{
+    0%
+    {
+        width: 10vw;
+        height: 10vh;
+    }
+    50%
+    {
+        width: 100vw;
+        height: 10vh;
+    }
+    100%
+    {
+        width: 100vw;
+        height: 100vh;
+    }
+}
+
+.newsline > .close
+{
+    position: absolute;
+    right: 0;
+    top: 0;
+    color: white;
+    z-index: 201;
+    font-size: 40px;
+}
+
+.newsline > .close:hover
+{
+    cursor: pointer;
+}
+
+.newsline > .upperTriangle
+{
+    width: 10vw;
+    height: 10vh;
+    clip-path: polygon(0 0, 0% 100%, 100% 0);
+    background: orange;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: inline-block;
+}
+
+.newsline > .lowerTriangle
+{
+    width: 10vw;
+    height: 10vh;
+    clip-path: polygon(100% 100%, 0% 100%, 100% 0);
+    background: orange;
+    display: inline-block;
+}
+
+.changePos
+{
+    animation: changePosition .6s 0.001s linear;
+    animation-fill-mode: forwards;
+}
+
+@keyframes changePosition
+{
+    0%
+    {
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+
+    50%
+    {
+        position: absolute;
+        top: 0;
+        left: 90vw;
+    }
+    100%
+    {
+        position: absolute;
+        top: 90vh;
+        left: 90vw;
+    }
+}
+
+.originalPosition
+{
+    animation: shake .6s linear;
+}
+
+@keyframes shake
+{
+    0%
+    {
+        position: absolute;
+        top: 90vh;
+        left: 90vw;
+    }
+
+    48.2%
+    {
+        position: absolute;
+        top: 90vh;
+        left: 0vw;
+    }
+    100%
+    {
+        position: absolute;
+        top: 0px;
+        left: 0vw;
+    }
+}
+</style>
