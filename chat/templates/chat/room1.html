@@ -10,12 +10,11 @@
       <meta name="viewport" content="width=device-width, iinitial-scale=1,user-scalable=no ">
       <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
       <script src="//cdnjs.cloudflare.com/ajax/libs/reconnecting-websocket/1.0.0/reconnecting-websocket.min.js"></script>
-      <link href="https://fonts.googleapis.com/css?family=Didact+Gothic|Muli:300|Questrial|Quicksand:300" rel="stylesheet">
       <style>
       @media all and (max-width: 767px)
       {
         .header h1{
-          font-size: 3vh;
+          font-size: 4vh;
         }
       }
          * {
@@ -36,11 +35,7 @@
          }
          body {
          overflow: hidden;
-         /*background-image:url('https://img00.deviantart.net/d2ca/i/2017/110/6/8/joric_gaming_background_by_digitaldeviant76-db6htia.jpg');*/
-         background-image: url('https://steamcdn-a.akamaihd.net/steamcommunity/public/images/items/411760/052cc65408266d992ca0ab3f3f436f9b23213872.jpg');
-         background-repeat: no-repeat;
-         background-position: center;
-         background-size: cover;
+         font-family: "Trebuchet MS";
          }
          ul, li {
          list-style-position: inside;
@@ -62,31 +57,27 @@
          top:0;
          width: 100vw;
          height: 10vh;
-         /*background-color: #1d5e88;*/
-         color: #3daeb3;
-         font-size:6vw;
-         font-family: 'Didact Gothic', sans-serif;
+         background-color: #282828;
+         color: #240090;
+         font-size: 6vw;
          text-align: center;
-         /*border:0.5vw solid #4f49bc;*/
+         border:0.5vw solid #a5a5ab;
          display: flex;
-         /*background:url('https://img00.deviantart.net/d2ca/i/2017/110/6/8/joric_gaming_background_by_digitaldeviant76-db6htia.jpg');*/
          align-items: center;
          justify-content: center;
 
          }
-         .header h1{
-         	font-size: 5vw;
-          text-shadow: 2px 4px 7px #bd9797;
+         .header h1 {
+         font-size:2vw;
+         color:#a4c2a8;
          }
-         
          .chat_room {
-         /*margin-top: 10vh;*/
+         margin-top: 10vh;
          height: 90vh;
          width:100vw;
          left:0;
          display: flex;
          flex-direction: row;
-
          }
          .OnlineUsersList {
          background-color: black;
@@ -129,14 +120,10 @@
          .chat__main {
          display: flex;
          flex-direction: column;
-         height: 100vh;
-         width: 65vw;
-          /* background-image: url('https://img00.deviantart.net/d2ca/i/2017/110/6/8/joric_gaming_background_by_digitaldeviant76-db6htia.jpg');*/
-         /*background-color: #3a4145;*/
-         position: absolute;
-         left: 0;
-         top: 10vh;
-
+         height: 90%;
+         width: 50vw;
+         /*  background-image: url('https://xshyfc.com/wp-content/uploads/data/2018/3/19/Coding-Wallpaper-HDmost-popular-coding-wallpaper-hd-1080x1920-pc-PIC-WPXH614596.jpg');*/
+         background-color: black;
          }
          .chat__messages::-webkit-scrollbar {
          background-color: #190061;
@@ -153,13 +140,13 @@
          -webkit-overflow-scrolling: touch;
          }
          .chat__footer {
-         /*background: #2c2c2c;*/
+         background: #190061;
          display: flex;
          flex-direction: row;
          padding: 10px;
          height: 10vh;
          flex-shrink: 0; 
-         width: 65vw;        
+         width: 50vw;        
          position: fixed;
          bottom: 0;
        }
@@ -170,21 +157,21 @@
          .chat__footer form * {
          margin-right: 10px;
          }
-         /*.chat__footer input {
+         .chat__footer input {
          border: none;
          padding: 10px;
          flex-grow: 1;   
          width: 100%;  
          max-width:80%;            
-         }*/
+         }
          .chat__messages {
          list-style-type: none;
          padding: 10px;
          }
          .message {
          padding: 10px;
-         /*background-color: #3500D3; */   
-         color: #16ea81;
+         background-color: #3500D3;    
+         color: white;
          font-weight: 400;    
          margin: 10px 0;
          font-family: "advent";
@@ -192,37 +179,29 @@
          border:1px solid #282828;
          transition: 0.1s ease-in-out;    
          }
-         /*.message:hover {
+         .message:hover {
          background-color: #240090;
-         }*/
-         .inputArea {
-         /*background-color: #3c3c3c;*/
-         background-color: inherit;
-         color: #94f3ff;
-         font-weight: 400;
-         width: 52vw;
-         font-size: 3.4vh;
-         border:none;
-         border-bottom: 2px solid #6f6f2d;
          }
-         /*.inputArea:focus {
-         border: 2px solid #3500D3;
-         }*/
-         .sendButton {
-         width: 10vw;
-         background-color: inherit;
-         color: #fcfdff;
+         .inputArea {
+         background-color: black;
+         color: white;
          font-weight: 400;
-         border-radius: 10px;
+         }
+         .inputArea:focus {
+         border: 2px solid #3500D3;
+         }
+         .sendButton {
+         width: 25%;
+         background-color: #3500D3;
+         color: white;
+         font-weight: 400;
+         border-radius: 3px;
          transition: 0.1s ease-in-out;
          box-sizing: border-box;
          font-size: 1.5vw;
-         border:none;
-         border-bottom: 2px solid #6f6f2d;
-
          }
          .sendButton:hover {
-         background-color: #89bac0;
+         background-color: #240090;
          }
          .message__title {
          display: flex;
@@ -231,23 +210,17 @@
          .message__title h4 {
          font-weight: 600;
          margin-right: 10px;
-         text-transform: uppercase;
          }
          .message__title span {
          color: #999;
          }
          .room_info {
-         width: 35vw;
-         height: 100vh;
-         /*background-color: #18b2c6*/;
-         /*background: url('https://img00.deviantart.net/d2ca/i/2017/110/6/8/joric_gaming_background_by_digitaldeviant76-db6htia.jpg');*/
-         position: absolute;
-         right: 0;
-         top: 10vh;
+         width: 50vw;
+         background-color: #282828
          }
          .leaderboard {
          max-height: 80vh;
-         margin-top:3vh;
+         margin-top:0;
          display: flex;
          flex-direction: row;
          overflow: auto;
@@ -279,20 +252,19 @@
          list-style-type: none;
          }
          .userListElement {
-         background-color: #444d42;
+         background-color: #5e8153;
          border-radius: 0.5vw;
          margin: 1vh 1vw;
          padding: 10px;
          font-size: 1.5vw;
          transition: 0.2s ease-in-out;
-         opacity: .6;
          }
          .userListElement:hover {
-         background-color: ;
+         background-color: #3500D3;
          }
          .scoresElement {
-         background-color: #404d3d;
-         color: #0aeeff;
+         background-color: #5e8153;
+         color: white;
          border-radius: 0.5vw;
          padding: 10px;
          margin: 1vh 1vw;
@@ -301,47 +273,37 @@
          display: flex;
          justify-content: center;
          align-items: center;
-         opacity: .6;
          }
          .scoresElement:hover {
-         background-color: ;
-         color: ;
+         background-color: #190061;
+         color: white;
          }
-         /*.user__info {
+         .user__info {
          padding: 10px;
          height: 10vh;
          width: 50vw;
-         color: #4e637dcf;
-         font-size: 3vw;
+         color: white;
          background-color: black;
          bottom: 0;
          position: fixed;
-         font-family: 'Questrial', sans-serif;
-         }*/
+         }
          .userInfoList {
          list-style-type: none;
          width: 48.5vw;
          height: 8vh;
          }
          .displayInfo {
-         background-color: #121211;
-         color: #f80f28cc;
-         font-family: 'Questrial', sans-serif;
-         border-radius: .2vw;
-         height: 5.2vh;
+         background-color: #282828;
+         border-radius: 1vw;
+         height: 7vh;
          padding: 10px;
          transition: 0.2s ease-in-out;
          display: flex;
-         font-size: 2vw;
          align-items: center;
          justify-content: center;
-         position: absolute;
-         bottom: 12.5vh;
-         right: 1.5vw;
-         width: 30vw;
          }
          .displayInfo:hover {
-         /*background-color: #c2d7f2;*/
+         background-color: #3500D3;
          }
          .infoText {
          font-size: 1.4vw;
@@ -352,35 +314,37 @@
             src: url(advent.ttf) format('opentype');
         }
          .logoutButton {
-         background-color: #3c485a;
-         color: #98fbff;
-         right: 2.2vw;
+         background-color: #5e8153;
+         color: white;
+         right: .5vw;
          position: absolute;
-         width: 8.2vw;
+         width: 8vw;
          display: flex;
          align-items: center;
          justify-content: center;
          text-decoration: none;
          margin: 0 auto;
-         height: 5.2vh;
-         border-radius: 0;
-         font-size: .99vw;
-         font-family: 'Muli', sans-serif;
+         height: 7vh;
+         border-radius: 1vw;
+         font-size: 1.4vw;
          transition: 0.2s ease-in-out;
          font-weight: 100;
-         box-shadow: 1.5px 1.5px 6px black;
          }
          .logoutButton:hover {
-         background-color: #2142a6;
+         background-color: #240090;
          }
-         
+         .message{
+          background-color: #5e8153;
+         }
+         .header h1{
+          color: #87ff65;
+         }
          @media (max-width: 600px) {
          * {
          font-size: 1rem;
          }
          .userListElement{
-          font-size: 2.5vh;
-          width: 15vw;
+          font-size: 2.5vh
          }
          .infoText{
           font-size: 2.3vh;
@@ -402,26 +366,21 @@
           transform: translateX(-2vh);
           line-height: 0;
           text-align: center;
-          font-size: 1.7vh;
-          width: 13.6vw;
+          font-size: 2vh
          }
          .header h1{
-          font-size: 6.1vw;
-          left: 6vw;
-          position: absolute;
+          font-size: 4vh;
          }
          .scoresElement{
           font-size: 2.5vh;
           width: 10vh
          }
          .logoutButton{
-          font-size: 4vw;
-          width: 15vw;
-          height: 4.3vh;
+          font-size: 2vh;
+          width: 10vh;
          }
          .inputArea{
           transform: translateX(-1vh);
-          width: 49vw;
          }
          .chat__footer form {
          margin-bottom: 10px;
@@ -429,19 +388,6 @@
          .chat__footer button {
          margin-right: 0px;
          }
-         }
-
-         .questions{
-          position: absolute;
-          left: 6vw;
-          background-color: #243339;
-          width: 55vw;
-          height: 75vh;
-          top: 2vh;
-          opacity: 0.6;
-          box-shadow: 3px 8px 15px #2d0909;
-          display: flex;
-          flex-direction: column;
          }
       </style>
    </head>
@@ -453,17 +399,15 @@
       
 
       <div class="header">
-         <h1>ANAGRAM</h1>
-         <a class="logoutButton" href="{% url 'logout' %}">Log out</a>
+         <h1>Anagram by CODING CLUB!</h1>
+         <a class="logoutButton" href="{% url 'logout' %}">LOGOUT</a>
       </div>
       
       <div class="chat_room">
          
          <div class="chat__main">
-            <div class="questions">
-                <ol id="chat-log" class="chat__messages"></ol>
-            </div>
-            
+            <ol id="chat-log" class="chat__messages">
+            </ol>
             <div class="chat__footer">
                <form id="message-form" onsubmit="return false">
                   <input class="inputArea" id="chat-message-input" name="message" type="text" placeholder="Message" autocomplete="off"/>    
@@ -484,8 +428,8 @@
             </div>
             <div class="user__info">
                <ul class="userInfoList">
-                  <li class="displayInfo"></li>
-                  
+                  <li class="displayInfo">
+                  </li>
                </ul>
             </div>
          </div>
@@ -496,7 +440,6 @@
    <script>
       var roomName = {{ room_name_json }};    //in views we used room_name_json  in room view as 
       //console.log(roomName);                  // 'room_name_json':mark_safe(json.dumps(room_name)
-      
       
             
       

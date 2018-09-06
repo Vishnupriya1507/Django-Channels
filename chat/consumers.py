@@ -133,8 +133,8 @@ class ChatConsumer(WebsocketConsumer):
             user.status = 'Online' 
         
         
+        #self.user = User.objects.get(username=self.scope["user"].username)
         self.user = User.objects.get(username=self.scope["user"].username)
-        
         print(self.user)
 
         self.player = Player.objects.get(name = self.user)  #--------- player logging in
