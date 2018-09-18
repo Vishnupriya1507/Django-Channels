@@ -5,32 +5,48 @@
       <title>SPORTZILLA 2018</title>
       <meta charset="utf-8"/>
       <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1 maximum-scale=1">
-      <link rel="stylesheet" type="text/css" href="{% static 'chat/sportzilla.css' %}" />                                           
+      <link rel="stylesheet" type="text/css" href="{% static 'chat/sportzilla.css' %}" />
+      <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+      <link href="https://fonts.googleapis.com/css?family=Open+Sans:800" rel="stylesheet">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+      <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+      <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+      <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+      <script type="text/javascript">
+         
+         $(document).ready(function() {
+            $("#loginLink").mouseover(function() {
+               $(".fa-angle-right").addClass("moveRight");
+            });
+            $("#loginLink").mouseout(function() {
+               $(".fa-angle-right").removeClass("moveRight");
+            });
+         });
+
+      </script>
 	</head>
 	<body>
-		<img alt="bodybg" src="{% static 'chat/icons/sports.jpg' %}" id="bodybgl" class="bodybg">
+      <div class="container">
+   		<img alt="bodybg" src="{% static 'chat/icons/sports.png' %}" id="bodybgl" class="bodybg">
 
-		<div id="bosmlogo">
-			<img alt="bosmlogo" src="{% static 'chat/icons/logo.png' %}">
-		</div>
-		<div id="title" class="text">
-			SPORTZILLA<br>2018
-		</div>
-		<div id="titlep" class="text">
-			SPORTZILLA<br><br>2018
-		</div>
-		<div id="cc" class="text">
-			<img alt="cclogo" src="{% static 'chat/icons/cclogo.jpg' %}">
-		</div>
-		<div id="content-wrapper">
-      <h1 style="font-family:'sedgwick'">QRIOUS</h1>
-      <button class="btn" onclick="window.location.assign('/accounts/google/login/?process=login')">LOG IN</button>
-    </div>
-
-        <a href="/accounts/google/login/?process=login" id="loginLink">LOGIN</a>
-
-		
+   		<div id="bosmlogo">
+   			<img alt="bosmlogo" class="logoyaar" src="{% static 'chat/icons/logo.png' %}">
+   		</div>
+   		<div id="title" class="text">
+   			SPORTZILLA<br>2018
+   		</div>
+   		<div id="cc" class="text">
+   			<img alt="cclogo" class="cclogohai" id="codingLogo" src="../static/chat/icons/cclogo1.png" style="background: transparent;">
+   		</div>
+<!--    		<div id="content-wrapper">
+            <h1 style="font-family:'sedgwick'">QRIOUS</h1>
+            <button class="button" onclick="window.location.assign('/accounts/google/login/?process=login')"><b>LOG IN</b></button>
+         </div> -->
+         <a href="/accounts/google/login/?process=login" id="loginLink">LOGIN&nbsp;&nbsp;<i class="fa fa-angle-right" aria-hidden="true" style="height: 15vh"></i></a>
+      </div>
 	</body>
+   <script type="text/javascript"></script>
 </html>
 
 

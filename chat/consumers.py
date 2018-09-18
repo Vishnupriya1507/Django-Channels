@@ -133,7 +133,6 @@ class ChatConsumer(WebsocketConsumer):
             user.status = 'Online' 
         
         
-        #self.user = User.objects.get(username=self.scope["user"].username)
         self.user = User.objects.get(username=self.scope["user"].username)
         print(self.user)
 
@@ -210,11 +209,13 @@ class ChatConsumer(WebsocketConsumer):
         
         self.player.save()
         
-        self.ans= Problem.objects.get(pk= self.room.ques_num ).ques_answer 
+        self.ans = Problem.objects.get(pk= self.room.ques_num ).ques_answer 
         
         print(self.ans)
         
         self.ques_No = Problem.objects.get(pk = self.room.ques_num)
+        print("it worked")
+        print(self.ques_No)
         
         self.ques = self.ques_No.prob_ques
         
@@ -315,7 +316,7 @@ class ChatConsumer(WebsocketConsumer):
         
             msg_typed = True
         
-            self.send(text_data = json.dumps({'message': message,
+            self.send(text_data = json.dumps({'message': message.lower(),
         
                 'username':user_,
         
@@ -331,7 +332,7 @@ class ChatConsumer(WebsocketConsumer):
                 'dict_':dict_      #-----{"room_name": "room1", "data": [["abc", 2100], ["f20170325", 1100]]}
                 }))
 
-            self.player.ans_given = message
+            self.player.ans_given = message.lower()
         
             self.player.save()
 
@@ -341,11 +342,12 @@ class ChatConsumer(WebsocketConsumer):
         
                 self.player.score += 100
         
-                self.ques_No = Problem.objects.get(pk = self.room.ques_num)
+                self.ques_No = Problem.objects.get(pk= self.room.ques_num)
         
                 self.ques = self.ques_No.prob_ques
         
                 self.ans= Problem.objects.get(pk= self.room.ques_num ).ques_answer 
+                
         
                 self.player.save()
         

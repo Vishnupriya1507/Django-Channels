@@ -10,7 +10,7 @@ from allauth.account.adapter import DefaultAccountAdapter
 
 class MyAccountAdapter(DefaultAccountAdapter):    
     def is_open_for_signup(self, request):
-        return False
+        return True
 
 
 class Room(models.Model):
@@ -23,7 +23,7 @@ class Room(models.Model):
     ans = models.CharField(max_length=200,default="abss")
     max_players = models.IntegerField(default=0)
     room_status = models.CharField(max_length=100, default="Closed")   #status of room wheteher it is open or closed
-    ques_num = models.IntegerField(default=1)
+    ques_num = models.IntegerField(default=6)
 
     # If only "staff" users are allowed (is_staff on django's User)
     staff_only = models.BooleanField(default=False)
@@ -33,7 +33,7 @@ class Room(models.Model):
 
 class Problem(models.Model):
 
-    ques_no = models.IntegerField(default=1)
+    ques_no = models.IntegerField(default=6)
     prob_ques = models.CharField(max_length=1000, null=True)
     ques_answer = models.CharField(max_length=1000)
    
