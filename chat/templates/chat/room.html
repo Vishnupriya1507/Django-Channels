@@ -76,7 +76,6 @@
          font-size:4vw;
          font-family: sans-serif;
          text-align: center;
-         /*border:0.5vw solid #4f49bc;*/
          display: flex;
          align-items: center;
          justify-content: center;
@@ -203,15 +202,15 @@
          margin: 10px 0;
          font-family: "advent";
          border-radius: 1vw;   
-         border: 5px solid black;
+         border: 3px solid black;
          transition: 0.1s ease-in-out;
          }
          .message:hover {
          background-color: #ccc;
          }
          .inputArea {
-         background-color: #90a8bf;
-         color: white;
+         background-color: #04101b;
+         color: #49e9b6;
          font-weight: 400;
          width: 52vw;
          font-size: 3.4vh;
@@ -241,6 +240,7 @@
             font-weight: 600;
             margin-right: 10px;
             font-family: 'Candal', sans-serif;
+            text-transform: uppercase;
          }
          .message__title span {
          color: #999;
@@ -255,6 +255,7 @@
          position: absolute;
          right: 0;
          top: 10vh;
+         display: block;
          }
          .leaderboard {
          max-height: 80vh;
@@ -324,10 +325,10 @@
          }
          .displayInfo {
          background-color: #bae4f3;
-         color: #4e637dcf;
+         color: #000;
          font-family: 'Questrial', sans-serif;
          border-radius: .2vw;
-         height: 5.2vh;
+         height: 8.2vh;
          padding: 10px;
          transition: 0.2s ease-in-out;
          display: flex;
@@ -345,6 +346,7 @@
          .infoText {
          font-size: 1.4vw;
          text-align: center;
+
          }
          @font-face {
             font-family: 'advent';
@@ -381,96 +383,6 @@
           color: black;
          }
 
-         @media screen and (max-width: 1050px) {
-          .logoutButton
-          {
-            font-size: 20px;
-          }
-         }
-
-         @media screen and (max-width: 700px) {
-          .logoutButton
-          {
-            font-size: 12px;
-          }
-         }
-         
-         @media (max-width: 600px) {
-         * {
-         font-size: 1rem;
-         }
-         .header > h1
-         {
-          animation: none;
-          transform: translateX(-20%);
-         }
-         .logoutButton
-         {
-          font-size: 10px;
-         }
-         .userListElement{
-          font-size: 2.5vh
-         }
-         .infoText{
-          font-size: 2.3vh;
-         }
-         .message__title h4{
-          font-size: 2.6vh;
-         }
-         .message__title{
-          margin-bottom: 5px;
-         }
-         .message{
-          margin: 5px 0;
-          padding: 5px;
-         }
-         .message__body p{
-          font-size: 3vh;
-          font-family: 'Shadows Into Light', cursive;
-         }
-         #chat-message-submit{
-          transform: translateX(-2vh);
-          line-height: 0;
-          text-align: center;
-          font-size: 1.7vh;
-          width: 13.6vw;
-         }
-         .header h1{
-          font-size: 11.1vw;
-          left: 17vw;
-          position: absolute;
-         }
-         .scoresElement{
-          font-size: 2.5vh;
-          width: 10vh
-         }
-         .leaderboard
-         {
-          height: 85px;
-          overflow-y: hidden;
-         }
-         .leaderboard .topScores
-         {
-          position: relative;
-          top: 40px;
-          left: -100px;
-         }
-         .logoutButton{
-          font-size: 12px;
-          width: 15vw;
-          height: 4.3vh;
-         }
-         .inputArea{
-          transform: translateX(-1vh);
-          width: 49vw;
-         }
-         .chat__footer form {
-         margin-bottom: 10px;
-         }
-         .chat__footer button {
-         margin-right: 0px;
-         }
-         }
          #questions{
           position: absolute;
           left: 3vw;
@@ -500,6 +412,241 @@
           #questions:after{
             filter: blur(90px);
           }
+
+          .room_info h1
+          {
+            display: none;
+          }
+
+          .room_info .closebtn
+          {
+            display: none;
+          }
+
+         @media screen and (max-width: 1050px) {
+          .logoutButton
+          {
+            font-size: 18px;
+          }
+         }
+
+         @media screen and (max-width: 700px) {
+          .logoutButton
+          {
+            font-size: 12px;
+          }
+         }
+         
+         @media (max-width: 600px) {
+         * {
+         font-size: 1rem;
+         }
+         .header > h1
+         {
+          animation: none;
+          transform: translateX(-20%);
+         }
+         .logoutButton
+         {
+          font-size: 10px;
+         }
+         .userListElement{
+          width: 155px;
+          font-size: 2.5vh
+         }
+         /*.infoText{
+          font-size: 2.3vh;
+         }*/
+         .message__title h4{
+          font-size: 2.6vh;
+         }
+         .message__title{
+          margin-bottom: 5px;
+         }
+         .message{
+          margin: 5px 0;
+          padding: 5px;
+         }
+         .message__body p{
+          font-size: 3vh;
+          font-family: 'Shadows Into Light', cursive;
+         }
+         #chat-message-submit{
+          transform: translateX(-2vh);
+          line-height: 0;
+          text-align: center;
+          font-size: 2.8vh;
+          width: 11.5vw;
+          height:5vh;
+          
+         }
+         .header h1{
+          font-size: 7.4vw;
+          left: 25vw;
+          position: absolute;
+         }
+         .scoresElement{
+          font-size: 2.5vh;
+          width: 10vh
+         }
+         .leaderboard
+         {
+          height: 85px;
+          overflow-y: hidden;
+         }/*
+         .leaderboard .topScores
+         {
+          position: relative;
+          top: 40px;
+          left: -100px;
+         }*/
+         .logoutButton{
+          font-size: 12px;
+          width: 15vw;
+          height: 4.3vh;
+         }
+         .inputArea{
+          transform: translateX(-1vh);
+          width: 49vw;
+          height:5.3vh;
+         }
+         .chat__footer form {
+         margin-bottom: 10px;
+         }
+         .chat__footer button {
+         margin-right: 0px;
+         }
+
+         .chat__main{
+          width:100vw;
+         }
+         #questions{
+          width: 93vw;
+          top: 5vh;
+         }
+
+         .room_info
+         {
+          width: 0;
+         }
+
+         .displayInfo
+         {
+          /*display: block;*/
+          position: absolute;
+          bottom: 2vh;
+          left: 2vw;
+          width: 90%;
+          font-size: 11px;
+          height: 11vh;
+         }
+
+
+
+        /* .questionsAppear
+         {
+          width: 90vw;
+         }*/
+
+         #questions:before
+         {
+          width: 95vw;
+          top: -1.2vh;
+          height: 73vh;
+         }
+
+         .chat__footer
+         {
+          width: 100vw;
+         }
+
+         .inputArea
+         {
+          width: 83vw;
+         }
+
+         .room_info
+          {
+            height: 100%;
+            width: 0;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            right: 0;
+            background: #00bcd4;
+            overflow-x: hidden;
+            transition: 0.5s;
+            padding-top: 60px;
+          }
+
+          .room_info > h1
+          {
+            position: absolute;
+            top: 5vh;
+            left: 5vw;
+            color: #EC407A;
+            font-size: 20px;
+            font-family: 'Shadows Into Light', cursive;
+            display: block;
+          }
+
+          .openHam
+          {
+            position: absolute;
+            top: -0.5vh;
+            left: 2vw;
+            font-size: 35px;
+            color: white;
+          }
+
+          .openHam:hover
+          {
+            cursor: pointer;
+          }
+
+          .closebtn
+          {
+            font-size: 30px;
+            color: white;
+            position: absolute;
+            top: 1vh;
+            right: 1vw;
+            text-decoration: none;
+
+          }
+
+          .closebtn:hover
+          {
+            color: #C2185B;
+          }
+
+          .topScores
+          {
+            position: relative;
+            left: 10px;
+          }
+
+          .infoText
+          {
+            font-size: 12px;
+            color: black;
+            text-align: center;
+          }
+    }
+
+    @media screen and (max-width: 400px) {
+      .topScores
+      {
+        position: relative;
+        left: 5vw;
+        height: 10vh;
+      }
+    }
+        
+
+
+
+         
          /* @keyframes animate{
             0%
             {
@@ -514,11 +661,11 @@
               background-position: 0 0;
             }
           }*/
-    .ball {
+    /*.ball {
       position: absolute;
       border-radius: 100%;
       opacity: 0.7;
-    }
+    }*/
     
       </style>
    </head>
@@ -527,11 +674,9 @@
 
    <body>
     <span style="display:none;" id="user-username">{{ request.user.username }}</span>
-      
-
       <div class="header">
          <h1>ANAGRAM</h1>
-         <!-- <img src="anagram.png"> -->
+         
          <a class="logoutButton" href="{% url 'logout' %}">Log out</a>
       </div>
       
@@ -540,7 +685,7 @@
          <div class="chat__main"  id="particles-js">
             
             
-            <div id="questions">
+            <div id="questions" class="questionsAppear">
               <ol id="chat-log" class="chat__messages"></ol>
           </div>
             
@@ -550,9 +695,10 @@
                   <input type="button" class="sendButton" id="chat-message-submit" value="Send">
                </form>
             </div>
-           
          </div>
          <div class="room_info">
+            <h1>LEADERBOARD</h1>
+            <a href="#" class="closebtn" onclick="closeNav()">&times;</a>
             <div class="leaderboard">
                <div class="userNames">
                   <ol class="users__list">
@@ -566,16 +712,30 @@
             <div class="user__info">
                <ul class="userInfoList">
                   <li class="displayInfo"></li>
-                  
                </ul>
             </div>
-         </div>
+       </div>
       </div>
+
+      <span class="openHam" onclick="openNav()">&#9776;</span>
 
       <script src="{% static 'chat/particles.js'%}" type="text/javascript"></script>
       <script src="{%static 'chat/app.js'%}" type="text/javascript"></script>
 
    </body>
+
+   <script type="text/javascript">
+     
+    function openNav() {
+      document.getElementsByClassName("room_info")[0].style.width = '220px';
+      document.getElementsByClassName("closebtn")[0].style.display = 'block';
+    }
+
+    function closeNav() {
+      document.getElementsByClassName("room_info")[0].style.width = '0';
+    }
+
+   </script>
 
    <script>
       var roomName = {{ room_name_json }};    //in views we used room_name_json  in room view as 

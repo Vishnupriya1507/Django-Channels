@@ -12,6 +12,7 @@
       <link href="https://fonts.googleapis.com/css?family=Fredoka+One" rel="stylesheet">
       <link href="https://fonts.googleapis.com/css?family=Monoton" rel="stylesheet">
       <link href="https://fonts.googleapis.com/css?family=Oswald" rel="stylesheet">
+      <link href="https://fonts.googleapis.com/css?family=Coiny" rel="stylesheet"> 
       <link rel="stylesheet" type="text/css" href="{% static 'chat/style.css' %}">
    </head>
 
@@ -19,8 +20,10 @@
 <body>
       <div id="container">
         <div>
-          <button class="btn" onclick="logout()">Logout</button>
           <button id="Rules" onclick="openStoryline()">Rules</button>
+         <!--<button id="developer" onclick="openDeveloper()">Developers</button>
+          -->
+          <button class="btn" onclick="logout()">Logout</button>
         </div>
 
         <div class="room">
@@ -31,7 +34,8 @@
           <div class="light bottom"></div>
           <!-- End of neon effect -->
 
-          <div class="rooms" style="background: rgb(240,240,240)">
+          <div class="rooms" style="background:rgb(108, 43, 43); height: 100vh;">
+            <button class="nirav" onclick="closeRooms()">&times;</button>
 			      <h3> OPEN PLAYING ROOMS </h3><br><br>
 			
     			  {% for room in rooms %}
@@ -64,14 +68,68 @@
           <div class="sixteen"><h1>E</h1></div>
         </div>
        
-
+        <button class="enterRoom" onclick="openRooms()" style="cursor: pointer;">Rooms</button>
        <!-- This part is to show the rules -->
-          <div class="newsline">
-              <div class="upperTriangle"></div>
-              <button class="close cross" type="button" onclick="closeStoryline()">&times;<button>  
-              <div class="lowerTriangle"></div>
-          </div>
+        <div class="newsline">
+          <div class="upperTriangle"></div>
+          <button class="btnForClose" type="button" onclick="closeStoryline()">&times;</button>
+          <h1>Real Time Anagram Challenge Rules</h1>
+
+          <p>1) Press the send button for getting question as well as for submitting answer.</p><br>
+          <p>2) Correct answer first will give you 100 points.And no negative marking</p><br>
+          <p>3) Please use your own network connection, it will not work on BITS server</p><br>
+          <p>4) We hope you all will enjoy the first ever REAL-TIME Challenge</p>
+
+          <!-- <div class="lowerTriangle"></div> -->
+        </div>
       </div>
+
+      <div class="siteDeveloper">
+        <button class="close cross" type="button" onclick="closeDeveloper()">&times;</button>
+
+      <div class="card">
+        <img src="../static/chat/icons/avatar.png" alt="Avatar" style="width:100%">
+        <div class="innercard">
+        <h4><b>Vishnupriya Srivastava</b></h4> 
+        <p>Backend Developer</p> 
+        </div>
+      </div>
+
+      <div class="card">
+        <img src="../static/chat/icons/avatar.png" alt="Avatar" style="width:100%">
+        <div class="innercard">
+        <h4><b>Kshitij Gupta</b></h4> 
+        <p>Backend Developer</p> 
+        </div>
+      </div>
+
+      <div class="card">
+        <img src="../static/chat/icons/avatar.png" alt="Avatar" style="width:100%">
+        <div class="innercard">
+        <h4><b>Akhil Arora</b></h4> 
+        <p>Backend Developer</p> 
+        </div>
+      </div>
+
+      <div class="card">
+        <img src="../static/chat/icons/avatar.png" alt="Avatar" style="width:100%">
+        <div class="innercard">
+        <h4><b>Subham Dash</b></h4> 
+        <p>Frontend Developer</p> 
+        </div>
+      </div>
+
+      <div class="card">
+        <img src="../static/chat/icons/avatar.png" alt="Avatar" style="width:100%">
+        <div class="innercard">
+          <h4><b>Nirav Asher</b></h4>
+          <p>Frontend Developer</p>
+        </div>
+      </div>
+
+      </div>
+
+
 
       <div class="visual">
         <img src="https://cdn.dribbble.com/users/232486/screenshots/2136002/logo-clip.gif">
@@ -87,24 +145,23 @@
         function logout(){
             window.location.pathname='logout';
         }
-     
 
-     function openStoryline()
+        function openStoryline()
         {
             document.getElementsByClassName('newsline')[0].style.display = 'block';
             document.getElementsByClassName('newsline')[0].classList.remove("revert");
-            document.getElementsByClassName('lowerTriangle')[0].classList.remove("originalPosition");
-            document.getElementsByClassName('lowerTriangle')[0].classList.add("changePos");
+            // document.getElementsByClassName('lowerTriangle')[0].classList.remove("originalPosition");
+            // document.getElementsByClassName('lowerTriangle')[0].classList.add("changePos");
         }
 
         function closeStoryline()
         {
-            document.getElementsByClassName('lowerTriangle')[0].classList.add("originalPosition");
+            // document.getElementsByClassName('lowerTriangle')[0].classList.add("originalPosition");
             document.getElementsByClassName('newsline')[0].classList.add("revert");
-            document.getElementsByClassName('lowerTriangle')[0].classList.remove("changePos");
+            // document.getElementsByClassName('lowerTriangle')[0].classList.remove("changePos");
             setTimeout(function(){
                 document.getElementsByClassName('newsline')[0].style.display = 'none';
-            }, 1000);
+            }, 600);
         }
    </script>
 
@@ -191,6 +248,24 @@
         lineOne[i+1].style.backgroundColor = colorArraySecond[j];
       }
 
+
+      //-----------------------------------------------
+
+      function openDeveloper() {
+        document.getElementsByClassName('siteDeveloper')[0].classList.add("developers");
+      }
+      
+      function closeDeveloper(){
+        document.getElementsByClassName('siteDeveloper')[0].classList.remove("developers");
+      }
+
+      function openRooms(){
+        document.getElementsByClassName('room')[0].style.display = 'block';
+      }
+
+      function closeRooms() {
+        document.getElementsByClassName('room')[0].style.display = 'none';
+      }
    </script>
    
 
